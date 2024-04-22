@@ -1,0 +1,250 @@
+<%- include('../../layouts/header.ejs') %>
+
+<div class="page-wrapper">
+  <%- include('../../layouts/navbar.ejs') %>
+  <main class="main">
+    <div
+      class="page-header text-center"
+      style="background-image: url('assets/images/page-header-bg.jpg');"
+    >
+      <div class="container">
+        <h1 class="page-title">My Profile</h1>
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+
+          <li class="breadcrumb-item active" aria-current="page">wallet</li>
+        </ol>
+      </div>
+      <!-- End .container -->
+    </nav>
+    <!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+      <div class="dashboard">
+        <div class="container">
+          <div class="row">
+            <aside class="col-md-4 col-lg-3">
+              <ul
+                class="nav nav-dashboard flex-column mb-3 mb-md-0"
+                role="tablist"
+              >
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="tab-dashboard-link"
+                    data-toggle="tab"
+                    href="#tab-dashboard"
+                    role="tab"
+                    aria-controls="tab-dashboard"
+                    aria-selected="true"
+                  >
+                    My Profile</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-orders-link" href="/orders"
+                    >Orders</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-address-link" href="/Address"
+                    >Adresses</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-wallet-link" href="/wallet"
+                    >Wallet</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="tab-coupons-link"
+                    href="/coupons"
+                    >Coupons</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Sign Out</a>
+                </li>
+              </ul>
+            </aside>
+            <!-- End .col-lg-3 -->
+            <div class="col-md-8 col-lg-9">
+              <div class="row">
+                <div class="row">
+                    <% if(locals.coupon) { %> 
+                        <% coupon.forEach(e => { %>
+                          <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+                            <div class="card">
+                              <img src="/product_images/<%= e.image %>" class="card-img-top img-fluid"/>
+                              <div class="card__content">
+                                <p class="card__title"><%= e.name %></p>
+                                <h6 class="text-danger"><%= e.discount %> % OFF</h6>
+                                <p class="card__description">📍<%= e.details %></p>
+                                <div class="coupon-row">
+                                  <span class="cpnCode"><%= e.couponcode %></span> <!-- Change id to class -->
+                                  <span class="cpnBtn">Copy Code</span> <!-- Change id to class -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <% }) %> 
+                      <% } %>
+                      
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End .row -->
+        </div>
+        <!-- End .container -->
+      </div>
+      <!-- End .dashboard -->
+    </div>
+    <!-- End .page-content -->
+  </main>
+  <!-- End .main -->
+
+  <%- include('../../layouts/footbar2') %>
+  <!-- Connect Footer -->
+</div>
+<!-- End .page-wrapper -->
+
+<button id="scroll-top" title="Back to Top">
+  <i class="icon-arrow-up"></i>
+</button>
+
+<%- include('../../layouts/mobview.ejs') %>
+
+<style>
+  .coupon-row {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    padding-left: 20px;
+  }
+  .cpnCode {
+    border: 1px dashed #fff;
+    padding: 10px 20px;
+    border-right: 0;
+  }
+.cpnBtn {
+    border: 1px solid #fff;
+    background: #fff;
+    padding: 10px 20px;
+    color: #7158fe;
+    cursor: pointer;
+  }
+  .card {
+    position: relative;
+    width: 350px;
+    aspect-ratio: 16/9;
+    background-color: #161616;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 1000px;
+    box-shadow: 0 0 0 5px #ffffff80;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .card svg {
+    width: 48px;
+    fill: #333;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .card__image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+  }
+
+  .card__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #4fab64;
+    transform: rotateX(-90deg);
+    transform-origin: bottom;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .card:hover .card__content {
+    transform: rotateX(0deg);
+  }
+
+  .card__title {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+    font-weight: 700;
+  }
+
+  .card:hover svg {
+    scale: 0;
+  }
+
+  .card__description {
+    margin: 6px 0 6px;
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 1.4;
+  }
+
+  .card__button {
+    padding: 10px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    border: 1px solid #777;
+  }
+
+  .secondary {
+    background: transparent;
+    color: #a82424;
+    border: 1px solid #777;
+  }
+</style>
+<script>
+  let cpnBtns = document.querySelectorAll(".cpnBtn"); 
+
+  cpnBtns.forEach(cpnBtn => {
+    cpnBtn.onclick = function () {
+      let cpnCode = cpnBtn.parentElement.querySelector(".cpnCode"); 
+      navigator.clipboard.writeText(cpnCode.innerHTML);
+      cpnBtn.innerHTML = "COPIED";
+      setTimeout(function () {
+        cpnBtn.innerHTML = "COPY CODE";
+      }, 3000);
+    };
+  });
+</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<%- include('../../layouts/footer.ejs') %>

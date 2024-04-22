@@ -1,0 +1,294 @@
+
+
+
+<%- include('../layouts/header.ejs') %>
+
+
+
+
+
+
+    <div class="page-wrapper">
+
+         <%- include('../layouts/navbar.ejs') %>
+         <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/homepage">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/signup">sign up</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">OTP</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+
+
+
+
+            <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/new/loginpage.png')">
+            	<div class="container">
+            		<div class="form-box">
+            			<div class="form-tab">
+	            			<ul class="nav nav-pills nav-fill" role="tablist">
+							    <li class="nav-item">
+							        <a class="nav-link active " id="signin-tab-2" data-toggle="tab" href="" role="tab" aria-controls="signin-2" aria-selected="false">OTP</a>
+							    </li>
+							</ul>
+
+							<div class="tab-content">
+							    <div class="tab-pane show active" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+							    	<form id="otpForm" action="/verify" method="post">
+							    		<div class="form-group text-center ">
+											<label for="otp1"><h4>Enter OTP:</h4></label> <br>
+											
+											
+													<span id="msg" class="message" hidden><%= msg %></span><br>
+													
+                                            <input type="text" name="digit1" id="otp1" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 'otp2')" required> - 
+        									<input type="text" name="digit2" id="otp2" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 'otp3')" required> - 
+											<input type="text" name="digit3" id="otp3" class="otp-input" maxlength="1" pattern="[0-9]" onkeyup="moveToNext(this, 'otp4')" required> - 
+        									<input type="text" name="digit4" id="otp4" class="otp-input" maxlength="1" pattern="[0-9]" required>
+											<input type="email" hidden value="<%=queryemail%>" name="email">
+                                            <% if(locals.token!= null) {%>
+                                                <input type="text" hidden value="<%=token%>"  name="token">
+                                                <% } %>
+
+
+											
+											<br><br>
+											<!-- <p id="timer">Time remaining: <span id="countdown">60</span> seconds</p> -->
+
+                                            <div>
+                                                <p id="timer">
+
+                                                </p>
+                                            </div>
+        									
+							    		</div><!-- End .form-group -->
+
+							    		<div class="form-footer justify-content-center ">
+											<!-- <a  class="btn btn-outline-primary-2 text-warning  "> -->
+												<button class="btn btn-outline-primary-2 text-warning " type="submit">
+													<span id="verifyBtn">VERIFY</span>
+													<i class="icon-long-arrow-right"></i>
+												</button>
+												
+												
+												<!-- </a> -->
+												<div class="justify-content-center text-warning" id="button-container" style="display: none;">
+                                                    <button class="btn btn-outline-primary-2 text-warning" id="resend-btn"  type="submit">
+                                                        <a href="/resend-otp?email=<%=queryemail%>">
+                                                            Resend OTP
+                                                        </a>
+                                                    </button>
+                                                </div>
+                                                
+												<!-- <div class="custom-control custom-checkbox">
+													<input type="checkbox" class="custom-control-input" id="signin-remember-2">
+													<label class="custom-control-label" for="signin-remember-2">Remember Me</label> -->
+													<!-- </div>End .custom-checkbox -->
+													
+													<!-- <a href="#" class="forgot-link">Forgot Your Password?</a> -->
+													<br>
+							    		</div><!-- End .form-footer -->
+							    	</form>
+							    	
+							    </div><!-- .End .tab-pane -->
+							</div><!-- End .tab-content -->
+						</div><!-- End .form-tab -->
+            		</div><!-- End .form-box -->
+            	</div><!-- End .container -->
+            </div><!-- End .login-page section-bg -->
+            
+             <!-- Success Modal -->
+
+ 
+
+
+
+
+         </main>
+
+
+ <%- include('../layouts/footbar2') %>
+ <!-- Connect Footer -->
+
+</div><!-- End .page-wrapper -->
+
+
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+<%- include('../layouts/mobview.ejs') %>
+
+<style>
+	.message-box {
+    position: relative;
+    padding: 15px;
+	
+    background-color: #f4433663; /* Red background color */
+    color: white; /* Text color */
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+
+    .otp-input {
+        width: 30px;
+        height: 40px;
+        text-align: center;
+        margin: 0 5px;
+        font-size: 1.5rem;
+		border: 0px;
+		border-radius: 5px;
+		box-shadow: rgba(4, 126, 40, 0.35) 0px 5px 15px;
+    }
+	.success-box {
+        padding: 10px;
+        background-color: #f1343459;
+        border: 1px solid #c3e6cb;
+        color: #0c0c0c;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
+<script>
+   function showAlert() {
+        $('#successModal').modal('show');
+        $('#button-container').hide();
+    }
+</script>
+
+<script>
+    // re-send button showing
+    setTimeout(function() {
+        document.getElementById('button-container').style.display = 'block';
+    }, 60000); 
+</script>
+
+
+<script>
+
+    
+
+    
+    const time = 60;
+
+    
+    function startTimer() {
+        let timeLeft = time;
+        const timerElement = document.getElementById("timer");
+
+        // Update the timer every second
+        const countdown = setInterval(() => {
+            timerElement.textContent = `Resend OTP in ${timeLeft} seconds`
+
+            // Decrease timeLeft by 1 second
+            timeLeft--;
+
+            // If the timer reaches 0, enable the Resend OTP button
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                document.getElementById("resend-btn").disabled = false;
+                timerElement.textContent = "Resend OTP";
+            }
+        }, 1000);
+    }
+
+    // Function to resend OTP
+   
+
+    // Start the timer when the page loads
+    window.onload = startTimer;
+</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<!--column changing-->
+
+<script>
+	function moveToNext(current, nextFieldID) {
+        if (current.value.length >= current.maxLength) {
+			document.getElementById(nextFieldID).focus();
+		}
+	}
+
+
+    
+
+	    // document.getElementById("verifyBtn").addEventListener("click", function() {
+
+        //     var successBox = document.getElementById("successBox");
+        //     successBox.style.display = "block";
+        // });
+
+        // verified sweet alert
+
+       const msg= document.getElementById('msg');
+
+       if(msg.textContent=='Invalid OTP...!'){
+
+        Swal.fire({
+            title: 'error',
+            text: 'Invalid OTP...!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+
+       }else if(msg.textContent=='verified successfully'){
+
+        Swal.fire({
+            title: 'Success',
+            text: 'verified successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            window.location.href = '/';
+        });
+
+       }else if (msg.textContent=='verified successfully') {
+        
+           Swal.fire({
+               title: 'Success',
+               text: 'Resend otp has been sended into your mail ',
+               icon: 'success',
+               confirmButtonText: 'OK'
+           }).then(() => {
+               window.location.href = '/';
+           });
+       } 
+
+
+       
+       
+
+
+</script>
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

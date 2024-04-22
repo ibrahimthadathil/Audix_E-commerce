@@ -1,0 +1,638 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<%- include('../../layouts/header.ejs') %>
+
+    <div class="page-wrapper" id="reloadDiv">
+
+        <%- include('../../layouts/navbar.ejs') %>
+
+  <main class="main" >
+
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">My Profile</h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <!-- <li class="breadcrumb-item"><a href="#"></a></li> -->
+                    <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+         <section class="">
+
+        <div class="container-fluid  py-5 h-100 position-relative " >
+
+          <div class="row d-flex    align-items-start  h-100" style="gap: 10rem;">
+            <aside class="col-md-2 col-lg-2  ">
+              <!-- profile nave -->
+              <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+
+                <li class="nav-item">
+                  <a class="nav-link active" id="tab-orders-link" href="/orders" aria-selected="true">Back to Orders</a>
+                </li>
+
+              </ul>
+              <br>
+
+              <div class="card" style="border: .1rem solid #ebebeb !important; border-radius: 10px;">
+
+                <div class="card-body">
+
+                  <div class="hedaer d-flex align-items-center justify-content-between w-100 ms-5">
+
+                    <h5 class="card-title text-center mb-2">
+
+                      address
+
+                    </h5>
+
+                  </div>
+
+                  <div class="mb-3">
+
+                    <label class="form-label"> name:-&nbsp;<%=order?.deliveryAddress.name %></label>
+
+                  </div>
+
+                  <div class="mb-3">
+
+                    <label class="form-label"> city:-&nbsp;<%=order?.deliveryAddress.city %></label>
+
+                  </div>
+
+                  <div class="mb-3">
+
+                    <label class="form-label"> state:-&nbsp;<%=order?.deliveryAddress.state %></label>
+
+                  </div>
+
+                  <div class="mb-3">
+
+                    <label class="form-label"> pincode:-&nbsp;<%=order?.deliveryAddress.pincode %></label>
+
+                  </div>
+
+                 
+
+                </div>
+
+              </div>
+
+            </aside>
+
+            <aside class="col col-lg-6 mb-4 mb-lg-0" >
+                
+              <div class="row w-100" style="gap: 2rem;">
+
+                <div class="container" >
+
+                 <div class="justify-content-end text-end me-5 ">
+                  <!-- <button class="bg-transparent btn border"><a href="/invoice/<%=order._id  %>">Download Invoice</a></button> -->
+                  <button class="bg-transparent btn border"><a href="/invoiceDwld/<%=order._id  %>">Download Invoice</a></button>
+
+                 </div>
+
+                  <table class="table table-wishlist text-center " style=" width:auto;">
+                    
+                    <thead class="">
+
+                      <tr>
+                        <th>Product</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity </th>
+                        <th>Delivery </th>
+                        <th>Total Price</th>
+                        <th>Options</th>
+                        <th >status</th>
+                      </tr>
+
+                    </thead>
+
+                    <tbody class="text-center">
+
+                      <% if(locals.order) { %>
+
+                        <% order?.products?.forEach((product, index)=>{ %>
+                          <% if(product.orderProStatus=='canceled'||product.orderProStatus=='return') {%>
+                            <tr>
+                            <td class="product-col">
+
+                              <figure class="product-media opacity-25 ">
+
+                               
+
+                                  <img src="/product_images/<%= product.productId.image[0] %> " alt="Product image">
+
+                                
+                                
+                              </figure>
+
+                            </td>
+                            <td class="opacity-50 ">
+
+                              
+                                <%= product.productId.name %>
+                              
+
+                              <!-- End .product -->
+                            </td>
+                            <td class="stock-col ms-3 ">$<%=product.productId.price %>
+                            </td>
+                            <td class="stock-col"><span class="in-stock">
+
+                              <%=product.quantity %>
+
+                            </span></td>
+                            <td><p class="text-danger"><%= product.orderProStatus=='canceled'?'canceled':'returned' %></p></td>
+                            <td class="price-col text-decoration-line-through ">
+
+                              $<%=product.price%>
+
+                            </td>
+                            <td>
+                              <p class="text-danger"> <%= product.orderProStatus=='canceled'?'Order canceled':'Order returned' %></p>
+                            </td>
+                          </tr>
+                            <% }else{ %>
+                              
+
+                          <tr>
+
+                            <td class="product-col">
+
+                              <figure class="product-media">
+
+                                
+
+                                  <img src="/product_images/<%= product.productId.image[0] %> " alt="Product image">
+
+                               
+                                
+                              </figure>
+
+                            </td>
+
+                            <td>
+
+                              
+                                <%= product.productId.name %>
+                              
+
+                              <!-- End .product -->
+                            </td>
+
+                            <td class="stock-col ms-3 ">$<%=product.productId.price %>
+                            </td>
+
+                            <td class="stock-col"><span class="in-stock">
+
+                                <%=product.quantity %>
+
+                              </span></td>
+
+                            <td class="stock-col <%=product.orderProStatus=='canceled'? 'text-danger':'text-primary'%>">
+                              
+                              <p><%= product.orderProStatus %></p>
+
+                            </td>
+
+                            <td class="price-col" id="nn">
+                              $<%=product.price%>
+                              <% if(order?.discount>0) {%>
+                                <p class="text-success " style="font-size: 12px;">coupon applied*</p>
+                                <% } %>
+
+                            </td>
+
+                            <td>
+
+                              <button  style="min-width: 80px;"  data-bs-toggle="modal" data-bs-target="#<%= index %>" class="btn <%=product.orderProStatus=='delivered'? 'bg-primary':'bg-danger' %>  text-white "><%=product.orderProStatus=='delivered'?'Return':'Cancel'%></button>
+                               <!-- Modal for cancel/return-->
+                               <div class="modal fade" id="<%= index %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Order Action <Address></Address></h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-5">
+                                        <% if(product.orderProStatus=='delivered') { %>
+                                            <div class="text-center">
+                                                <h6>Are you sure to <span class="text-danger px-1 ">Return</span> this Product?</h6>
+                                            </div>
+                                            <div class="text-start  gap-3 form-check ">
+                                              <form >
+                                              <input type="radio" id="one" name="reason" value="Change of mind">
+                                              <label for="one" style="padding-top: 10px;" >Change of mind</label><br>
+                                              <input type="radio" id="two" name="reason" value="Product Damaged">
+                                              <label for="two" style="padding-top: 10px;" >Product Damaged</label><br>
+                                              <input   type="radio" id="three" name="reason" value="Other Reasone">
+                                              <label  for="three" style="padding-top: 10px;" >Other Reasone</label><br>
+                                              
+                                              <p id="mssg" class="text-center text-danger"></p>
+                                            </form>
+                                       </div>
+                                        <% } else { %>
+                                            <div class="text-center fs-3 ">
+                                                <h6>Are you sure to<span class="text-danger px-1 ">Cancel</span> this Product?</h6>
+                                            </div>
+                                             <div class="text-start  gap-3 form-check ">
+                                             
+                                                  <input type="radio" id="one" name="reason" value="Change of mind">
+                                                  <label for="one" style="padding-top: 10px;" >Change of mind</label><br>
+                                                  <input type="radio" id="two" name="reason" value="Change of mind">
+                                                  <label for="two" style="padding-top: 10px;" >Delayed shipping</label><br>
+                                                  <input   type="radio" id="three" name="reason" value="Price discrepancy">
+                                                  <label  for="three" style="padding-top: 10px;" >Price discrepancy</label><br>
+                                                  <input class="form-control " type="text" id="reason" name="other_reason" placeholder="Other reason">
+                                                  <p id="mssg" class="text-center text-danger"></p>
+                                                
+                                           </div>
+                                             
+                                        <% } %>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <% if(product.orderProStatus=='delivered') { %>
+                                            <button type="button" id="return" onclick="returnProduct('<%=product.productId._id%>','<%=order._id%>')" class="btn btn-primary" data-bs-dismiss="modal">Return</button>
+                                        <% } else { %>
+                                            <button type="button" id="cancel" onclick="cancel('<%=product.productId._id%>','<%=order._id%>')" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                
+                                </div>
+                            </div>
+                            <!--End Modal for cancel/return-->
+                            </td>
+                            <td style="margin-top: 10px;">
+                              
+                             <h3 class=" text-center p-2 " style="cursor: pointer;margin-top: 20px;" data-toggle="modal" data-target="#status<%= index %>">
+                              <i class="ri-road-map-line px-4 "></i>  
+                           
+
+                             </h3>
+                            </td>
+                            <!-- Large Size Bootstrap Modal -->
+                            <div class="modal fade" id="status<%= index %>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-lg" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="largeModalLabel">Order Status</h5>
+                                          
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                          </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!-- Order Status -->
+                                          <div class="card">
+                                              <div class="row d-flex justify-content-between px-3 top">
+                                                  <div class="d-flex">
+                                                      <h5>ORDER <span class="text-primary font-weight-bold">#<%= order._id %></span></h5>
+                                                  </div>
+                                                  <div class="d-flex flex-column text-sm-right">
+                                                      <p class="mb-0">Expected Arrival <span>01/12/19</span></p>
+                                                      <p>USPS <span class="font-weight-bold">234094567242423422898</span></p>
+                                                  </div>
+                                              </div>
+                                              <!-- Add class 'active' to progress -->
+                                              <div class="row d-flex justify-content-center">
+                                                  <div class="col-12">
+                                                    <ul id="progressbar" class="text-center">
+                                                      <li class="active step0"></li>
+                                                      <li class="active step0"></li>
+                                                      <li class="<%= product.orderProStatus === 'shipped' || product.orderProStatus === 'delivered' ? 'active step0' : 'step0' %>"></li>
+                                                      <li class="<%= product.orderProStatus === 'delivered' ? 'active step0' : 'step0' %>"></li>
+                                                  </ul>
+                                                  
+                                                  </div>
+                                              </div>
+                                              <div class="row justify-content-between top">
+
+                                                <div class="d-flex icon-content">
+                                                    <img class="icon" src="https://i.imgur.com/9nnc9Et.png">
+                                                    <div class="d-flex flex-column">
+                                                        <p class="font-weight-bold">Order<br>Processed</p>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex icon-content">
+                                                    <img class="icon" src="https://i.imgur.com/u1AzR7w.png">
+                                                    <div class="d-flex flex-column">
+                                                        <p class="font-weight-bold">Order<br>Pending</p>
+                                                    </div>
+                                                </div>
+                                                <% if(product.orderProStatus=='shipped'||product.orderProStatus=='delivered') {%>
+                                                  
+                                                <div class="d-flex icon-content">
+                                                    <img class="icon" src="https://i.imgur.com/TkPm63y.png">
+                                                    <div class="d-flex flex-column">
+                                                        <p class="font-weight-bold">Order<br>shipped</p>
+                                                    </div>
+                                                </div>
+                                                <% }%>
+                                                <%if (product.orderProStatus==='delivered'){ %>
+                                                  
+                                                <div class="d-flex icon-content">
+                                                    <img class="icon " src="https://i.imgur.com/HdsziHP.png" >
+                                                    <div class="d-flex flex-column">
+                                                        <p class="font-weight-bold">Order<br>deliverd</p>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                            
+                                          </div>
+                                      </div>
+                                     
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          </tr>
+                          <% } %>
+                        <% })} %>
+
+                    </tbody>
+
+                  </table>
+
+                  <% if(locals.order) {%>
+
+                    <div class="wishlist-share">
+
+                      <div class="social-icons social-icons-sm mb-2">
+
+                        <label class="social-label">Total:</label>
+
+                        $<%= locals.order.orderAmount %>
+
+                      </div><!-- End .soial-icons -->
+
+                    </div>
+
+                    <% } %>
+                    
+
+                </div>
+
+              </div>
+            </aside>
+          </div>
+
+        </div>
+
+      </section >
+  </main>
+
+      
+      <%- include('../../layouts/footbar2') %>
+      <!-- Connect Footer -->
+   
+  </div><!-- End .page-wrapper -->
+
+
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+  <%- include('../../layouts/mobview.ejs') %>
+
+  <script>
+    // this script is for the discout show in order
+     let Totalamount = document.getElementById('nn')
+     fetch('/totaldiscprice',{method:'put'})
+
+  </script>
+  <style>
+    /* Custom CSS for modal */
+    body {
+      color: #000;
+      overflow-x: hidden;
+      height: 100%;
+      background-color: #ffffff;
+      background-repeat: no-repeat;
+    }
+
+    .card {
+      z-index: 0;
+      background-color: #ECEFF1;
+      /* padding-bottom: 20px;
+      margin-top: 90px; */
+      /* margin-bottom: 90px; */
+      border-radius: 10px;
+    }
+
+    .top {
+      padding-top: 40px;
+      padding-left: 13% !important;
+      padding-right: 13% !important;
+    }
+
+    /*Icon progressbar*/
+    #progressbar {
+      margin-bottom: 30px;
+      overflow: hidden;
+      color: #455A64;
+      padding-left: 0px;
+      margin-top: 30px;
+    } 
+
+    #progressbar li {
+      list-style-type: none;
+      font-size: 13px;
+      width: 25%;
+      float: left;
+      position: relative;
+      font-weight: 400;
+    }
+
+    #progressbar .step0:before {
+      font-family: FontAwesome;
+      content: "\f10c";
+      color: #fff;
+    }
+
+    #progressbar li:before {
+      width: 40px;
+      height: 40px;
+      line-height: 45px;
+      display: block;
+      font-size: 20px;
+      background: #C5CAE9;
+      border-radius: 50%;
+      margin: auto;
+      padding: 0px;
+    }
+
+    /*ProgressBar connectors*/
+    #progressbar li:after {
+      content: '';
+      width: 100%;
+      height: 12px;
+      background: #C5CAE9;
+      position: absolute;
+      left: 0;
+      top: 16px;
+      z-index: -1;
+    }
+
+    #progressbar li:last-child:after {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      position: absolute;
+      left: -50%;
+    }
+
+    #progressbar li:nth-child(2):after, #progressbar li:nth-child(3):after {
+      left: -50%;
+    }
+
+    #progressbar li:first-child:after {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      position: absolute;
+      left: 50%;
+    }
+
+    #progressbar li:last-child:after {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    #progressbar li:first-child:after {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    /*Color number of the step and the connector before it*/
+    #progressbar li.active:before, #progressbar li.active:after {
+      background: #651FFF;
+    }
+
+    #progressbar li.active:before {
+      font-family: FontAwesome;
+      content: "\f00c";
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .icon-content { 
+      padding-bottom: 20px;
+    }
+
+    @media screen and (max-width: 992px) {
+      .icon-content {
+          width: 50%;
+      }
+    }
+  </style>
+  <script>
+    
+    valreturn()
+
+    function valreturn(){
+      // return valisdation 
+
+
+const returnButton = document.getElementById('return');
+const inputs = document.querySelectorAll('input[name="reason"]');
+const msg = document.getElementById('mssg')
+
+
+returnButton.disabled = true;
+msg.textContent="please choose a reason"
+
+inputs.forEach(input => {
+  input.addEventListener('change', () => {
+
+    if ( isChecked()) {
+      
+      returnButton.disabled = false; // Enable the button
+      msg.textContent=''
+    } else {
+      returnButton.disabled = true; // Otherwise, disable the button
+    }
+  });
+});
+
+function isChecked() {
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].checked) {
+      return true;
+    }
+  }
+  return false;
+}
+    }
+
+  // for cancel the order
+    function cancel(productid,orderid){
+      console.log(productid,+ '   '+orderid);
+     fetch('/cancelOrder',{method:'put',headers:{'Content-type':'application/json'},body:JSON.stringify({cancelproduct:productid,cancelorder:orderid})})
+     .then(res =>res.json())
+     .then(data =>{
+      if(data.canceled){
+        $('#reloadDiv').load(`/orderDetails?id=${orderid} #reloadDiv`)
+
+      }
+     })
+
+    }
+// for return the order
+
+function returnProduct(productid,orderid){
+  const Reason = document.querySelector('input[name="reason"]:checked')
+  fetch('/returnOrder',{method:'put',headers:{'Content-type':'application/json'},body:JSON.stringify({orId:orderid,proId:productid,reason:Reason.value})})
+  .then(res => res.json())
+  .then(data=>{
+    if(data.updated){
+      $('#reloadDiv').load(`/orderDetails?id=${orderid} #reloadDiv`)
+    }
+  })
+}
+
+
+
+
+
+
+function validateForm() {
+    if ((reason1.checked || reason2.checked || reason3.checked) || (inputReason.value.length > 4)) {
+        msg.textContent = "";
+        canceld.disabled = false;
+    } else {
+    }
+}
+
+// Add event listeners to radio buttons and input field
+// reason1.addEventListener('change', validateForm);
+// reason2.addEventListener('change', validateForm);
+// reason3.addEventListener('change', validateForm);
+// inputReason.addEventListener('input', validateForm);
+
+
+  </script>
+<!--Connect Mobaile View-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Plugins JS File -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<%- include('../../layouts/footer.ejs') %>

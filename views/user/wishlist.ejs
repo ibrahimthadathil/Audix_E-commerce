@@ -1,0 +1,219 @@
+<%- include('../layouts/header.ejs') %>
+
+<div class="page-wrapper">
+	
+	<%- include('../layouts/navbar.ejs') %>
+
+
+    <main class="main">
+        	<div class="page-header text-center" >
+        		<div class="container">
+        			<h1 class="page-title text-white ">Wishlist<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content" id="reload">
+            	<div class="container">
+					<% if(whishedProduct&&whishedProduct.products.length>=1){ %>
+					<table class="table table-wishlist ">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Price</th>
+								<th>Stock Status</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<% if(whishedProduct) {%>
+						<% whishedProduct.products.forEach((product,i)=> { %>
+
+						<% if(product.productId.status==false) {%>
+							<tr>
+								<td class="product-col">
+									<div class="product">
+										<figure class="product-media">
+											<a href="#">
+												<img src="/product_Images/<%= product.productId.image[0] %>" alt="Product image">
+											</a>
+										</figure>
+
+										<h3 class="product-title">
+											<a href="#" class="text-danger ">currently unavailable</a>
+										</h3><!-- End .product-title -->
+									</div><!-- End .product -->
+								</td>
+								<td class="price-col">$<%= product.productId.price %></td>
+
+							</tr>
+						<% }else{ %>
+							<tr>
+								<td class="product-col">
+									<div class="product">
+										<figure class="product-media">
+											<a href="#">
+												<img src="/product_Images/<%= product.productId.image[0] %>" alt="Product image">
+											</a>
+										</figure>
+
+										<h3 class="product-title">
+											<a href="#"><%= product.productId.name %></a>
+										</h3><!-- End .product-title -->
+									</div><!-- End .product -->
+								</td>
+								<td class="price-col">$<%= product.productId.price %></td>
+								<td class="stock-col"><span class="<%= product.productId.stock <= 0 ? 'text-danger ' : 'text-success' %>"><%= product.productId.stock <=0 ? 'out of stock':'In stock'%></span></td>
+								<td class="action-col">
+									<button class="btn btn-block btn-outline-primary-2" onclick="addtoCart('<%= product.productId._id %>')" <%= product.productId.stock <= 0 ? 'disabled ':''%>><i class="icon-cart-plus"></i><%= product.productId.stock <= 0 ? 'Out Of Stock ':'Move to Cart'%></button>
+								</td>
+								<td class="remove-col"><button class="btn-remove" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= i %>" ><i class="icon-close"></i></button></td>
+							</tr>
+							<!-- Modal for Delete whishlist-->
+							<div class="modal fade" id="staticBackdrop<%= i %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h1 class="modal-title fs-5" id="staticBackdropLabel">Delete <Address></Address></h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body d-flex justify-content-center p-5">
+									<p>Are you sure to <p class="text-danger px-1"> Remove </p> from Wishlist ?</p>
+									</div>
+									<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary"data-bs-dismiss="modal" onclick="deleteItem('<%= product.productId._id %>')">YES</button>
+									</div>
+								</div>
+								</div>
+							</div>
+							<!--End Modal for Delete whishlist-->
+							<% } %>
+						<% }) %>
+						
+						</tbody>
+					</table>
+					<% }else{ %>
+						<tr>
+
+							<p class="text-center text-danger p-5">your wish list empty</p><br>
+
+						</tr>
+						<% } %><!-- End .table table-wishlist -->
+						<% }else{ %>
+							<p class="text-center text-danger p-5">your wish list empty</p><br>
+							<% } %>
+	            	<div class="wishlist-share">
+	            		<div class="social-icons social-icons-sm mb-2">
+	            			<label class="social-label">Share on:</label>
+	    					<a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+	    					<a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+	    					<a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+	    					<a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+	    					<a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+	    				</div><!-- End .soial-icons -->
+	            	</div><!-- End .wishlist-share -->
+            	</div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+	<!-- Connect Footer -->
+		<%- include('../layouts/footbar2') %>
+		<!-- Connect Footer -->
+     
+	</div><!-- End .page-wrapper -->
+
+
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+		<!--Connect Mobaile View-->
+        <%- include('../layouts/mobview.ejs') %>
+		<!--Connect Mobaile View-->
+
+   
+
+    <!-- Plugins JS File -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js">
+
+	</script>
+    <script >
+		function deleteItem(id){
+			fetch(`/deleteWhish/${id}`,{method:'put'})
+			.then(res=>res.json())
+			.then(data =>{
+				if(data.removed){
+					console.log('hii');
+					$('#reload').load('/wishlist #reload')
+				}
+			})
+			
+		}
+		// add to cart
+		function addtoCart(id,){
+        fetch(`/addcart/${id}`,{method:'post'})
+        .then(res => res.json())
+        .then(data =>{
+            if(data.failed){
+                window.location.href = '/login'
+            }else if(data.exist){
+                
+ const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    // toast.onmouseenter = Swal.stopTimer;
+    // toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+Toast.fire({
+  icon: "warning",
+  title: "Already Added"
+});
+            }else if(data.success){
+                
+                const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+Toast.fire({
+  icon: "success",
+  title: "Added TO Cart"
+});
+
+$('#reload').load('/wishlist #reload')
+            }
+        })
+    }
+	</script>
+
+    <script src="https://kit.fontawesome.com/fbf4adc7c4.js" crossorigin="anonymous"></script>
+	
+
+<%- include('../layouts/footer') %>

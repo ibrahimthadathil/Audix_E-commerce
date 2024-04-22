@@ -1,0 +1,765 @@
+<%- include('../layouts/header.ejs') %>
+
+
+<div class="page-wrapper">
+	
+	<%- include('../layouts/navbar.ejs') %>
+
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">Checkout<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/homepage">Home</a></li>
+                    <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+
+        	<!--Modal Choose Address-->
+
+		<div class="modal fade" id="changeAddressModal" tabindex="-1" aria-labelledby="changeAddressModal" aria-hidden="true">
+
+			<div class="modal-dialog">
+
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Choose Address</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+			    <div class="modal-body">
+					
+					<div class="row">
+						
+						<% for (let i = 0; i < addressList?.addresss?.length; i++) { %>
+							
+							<% if (addressList.addresss[i].status == false) { %>
+                                                                                                                                                                                                                                                                               
+								<div class="col-lg-5" style="margin: auto;">
+
+									<div class="card card-dashboard mt-2 style" style="width: 100;box-shadow:1px 1px 4px 0px#888888;" onclick="addresChoose('<%= addressList.addresss[i]._id %>')">
+													
+										<div class="card-body" style="cursor: pointer;">
+
+												<!-- <input type="checkbox" class="card-checkbox"> -->
+
+												<!-- <button type="button" class="close" aria-label="Close"  style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAdd('')">
+													<span aria-hidden="true">&times;</span>
+												</button> -->
+
+												<!-- <span style="cursor: pointer; display: flex; justify-content: end;" data-bs-toggle="modal" data-bs-target="#changeAddressModal">Change</span> -->
+
+												<h3 class="card-title">Address</h3><!-- End .card-title -->
+
+												
+                                                <p><%= addressList.addresss[i].userName %><br>
+                                                    <%= addressList.addresss[i].name %><br>
+                                                    <%= addressList.addresss[i].city%><br>
+                                                    <%= addressList.addresss[i].state %><br>
+                                                    <%= addressList.addresss[i].pincode %><br>
+                                                    <%= addressList.addresss[i].phone %><br>
+
+											<!-- <a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit<i class="icon-edit"></i></a> -->
+
+										</div><!-- End .card-body -->
+
+									</div><!-- End .card-dashboard -->
+
+								</div><!-- End .col-lg-6 -->
+
+							<%	} else if(addressList?.addresss?.length <=1){ %>
+
+                               <div class="p-5 ">
+                                <p class="text-center">Add another address to change... <a href="/Address">Click Here</a> </p>
+                               </div>
+
+                                <% } %>
+
+						<% } %>
+							
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+						</div>
+
+					</div>
+
+				</div>
+				
+			</div>
+			
+		</div>
+
+        <div class="page-content">
+            <div class="checkout">
+                <div class="container">
+                    <div class="cart-discount">
+                       
+                         <% if(cartData.couponDiscount==0){ %>
+                       
+                        <form action="/couponUse" method="post">
+                            <p class="ps-2" id="cop"></p>
+                            <div class="input-group">
+                                <input type="text" class="form-control" required placeholder="coupon code"   oninput="coup(this)" name="coupon">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary-2 px-2" style="height: 40px;" type="submit" id="btc">Apply</button>
+                                </div><!-- .End .input-group-append -->
+                            </div><!-- End .input-group -->
+                        </form>
+                        <% }else{ %>
+                            <form >
+                               
+                                <div class="input-group">
+                                    <input type="text" class="form-control"  placeholder="Remove your Coupon" id="rem" name="coupon" disabled>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-danger px-2"style="height: 40px;" type="button" onclick="CouponRe('<%=cartData?._id%>')" id="btc">Remove</button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- End .input-group -->
+                            </form>
+                        <% } %>
+                    </div><!-- End .cart-discount -->
+              
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div class="container-fluid px-3 d-flex justify-content-end ">
+
+
+                                      <!-- Modal For Address Add-->
+
+                                      <div class="modal fade" id="address" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">   <!-- Add Addres Modal -->
+
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+
+                                            <div class="modal-header">
+                                              <h6 class="modal-title " id="exampleModalLabel">Add Address</h6>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div class="modal-body px-4">
+
+                                              <form method="post" style="padding-left: 25px;padding-right: 15px;" id="addform">
+
+                                                  <div class="mb-3">
+                                                      <label for="address" class="col-form-label text-black">Address :</label>
+                                                      <input type="text" class="form-control" name="address"  id="address" placeholder="Enter your Address">
+                                                      <div class="h-25"><p class="text-danger " id="errAD"></p></div>
+                                                  </div>
+                                                  
+                                                  <div class="mb-3">
+                                                      <label for="city" class="col-form-label text-black">City :</label>
+                                                      <input type="text" class="form-control" name="city" id="city" placeholder="Enter your City Name">
+                                                      <div class="h-25"><p id="cityError"></p></div>
+                                                  </div>
+                                                  
+                                                  <div class="mb-3">
+                                                      <label for="state" class="col-form-label text-black">State :</label>
+                                                      <input type="text" class="form-control" name="state" id="state" placeholder="Enter your State">
+                                                      <div class="h-25"><p id="stateError"></p></div>
+                                                  </div>
+                                                  
+                                                  <div class="mb-3 d-flex">
+                                                      <div>
+                                                          <label for="pincode" class="col-form-label text-black">Pincode :</label>
+                                                          <input type="text" class="form-control w-75" name="pincode" id="pincode" placeholder="Pincode">
+                                                          <div class="h-25"><p id="pincodeError"></p></div>
+                                                      </div>
+                                                      <div>
+                                                          <label for="pincode" class="col-form-label text-black">Phone :</label>
+                                                          <input type="text" class="form-control w-100" name="phone" id="phone" placeholder="Phone number">
+                                                          <div class="h-25"><p id="phoneError"></p></div>
+                                                      </div>
+                                                  </div>
+                                                  
+                                                  
+                                              </form>
+                                              
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary"   onclick="addAddress('<%= userdata._id %>')">Add</button>
+                                              </div>
+                                            
+                                            </div>
+                                            <!--row End-->
+
+
+                                          </div>
+                                          
+                                        </div>
+                                                
+                                      </div>
+                                        
+                                  </div>
+                                  <!--showing true address-->
+                                  <div class="row  ">
+                                    <% if(addressList!==null &&  addressList.addresss.length!==0) { %>
+
+                                     <% for(let i=0; i<addressList.addresss.length;i++){ %>
+                                        <% if (addressList.addresss[i].status == true) { %>
+                                        <div class="col-lg-6">
+
+                                            <div class="card card-dashboard" >
+
+                                                
+                                                <div class="card-body">
+                                                    
+                                                    <h3 class="card-title">Address</h3><!-- End .card-title -->
+                                                    <span style="cursor: pointer; display: flex; justify-content: end;" data-bs-toggle="modal"  data-bs-target="#changeAddressModal">Change</span>
+
+                                                    <p><%= addressList.addresss[i].userName %><br>
+                                                    <%= addressList.addresss[i].name %><br>
+                                                    <%= addressList.addresss[i].city%><br>
+                                                    <%= addressList.addresss[i].state %><br>
+                                                    <%= addressList.addresss[i].pincode %><br>
+                                                    <%= addressList.addresss[i].phone %><br>
+                                                    <a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" onclick="editAddress('<%= addressList.addresss[i]._id %>')" data-bs-target="#addressEditModal<%= i %>">Edit<i class="icon-edit"></i></a></p>
+                 
+                                                 </div><!-- End .card-body -->
+
+                                            </div><!-- End .card-dashboard -->
+
+                                        </div><!-- End .col-lg-6 -->
+                                        <div class="modal fade" id="addressEditModal<%= i %>" tabindex="-1" aria-labelledby="exampleaddresseditl" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h6 class="modal-title" id="exampleaddressedit">Edit Address</h6>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        
+                                                        <form action="/updateAddresscheckout" method="post" style="padding-left: 15px;padding-right: 15px;" id="editForm">
+                                                            <div class="mb-3">
+                                                                <label for="Editaddress" class="col-form-label text-black">Address :</label>
+                                                                <input type="text" class="form-control" name="address" id="Editaddress" placeholder="Enter your Address">
+                                                                <div class="h-25"><p class="text-danger" id="errAD"></p></div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="city" class="col-form-label text-black">City :</label>
+                                                                <input type="text" class="form-control" name="city"  id="editcity" placeholder="Enter your City Name">
+                                                                <div class="h-25"><p id="cityError"></p></div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3">
+                                                                <label for="state" class="col-form-label text-black">State :</label>
+                                                                <input type="text" class="form-control" name="state"  id="editstate" placeholder="Enter your State">
+                                                                <div class="h-25"><p id="stateError"></p></div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3 d-flex">
+                                                                <div>
+                                                                    <label for="pincode" class="col-form-label text-black">Pincode :</label>
+                                                                    <input type="text" class="form-control w-75"  name="pincode" id="editpincode" placeholder="Pincode">
+                                                                    <div class="h-25"><p id="pincodeError"></p></div>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="pincode" class="col-form-label text-black">Phone :</label>
+                                                                    <input type="text" class="form-control w-100"  name="phone" id="editphone" placeholder="Phone number">
+                                                                    <div class="h-25"><p id="phoneError"></p></div>
+                                                                </div>
+                                                            </div>
+                                                                    <input type="hidden" name="id" id="id">
+                                                            <!-- Other input fields -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary" >Update</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    
+                               <% }else if(addressList?.addresss.length<2){ %>
+                                <div>
+
+                                    <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#address" data-bs-whatever="@mdo">Add Address</button>
+                                </div>
+                                <% } %>
+                               <% } %>
+                               <% }else if(addressList==null || addressList.addresss.length == 0 || addressList.addresss.staus==false ){ %>
+
+                                
+                                <div>
+                                <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#address" data-bs-whatever="@mdo">Add Address</button>
+
+                                </div>
+
+                                <div class="text-center"><p class="text-black  py-5 ">click The Add Address Button to add Address...!</p></div>
+                                
+                                
+                                <% } %>
+                                </div>
+                            </div><!-- End .col-lg-9 -->
+                            <aside class="col-lg-3">
+                                <div class="summary bg-white ">
+                                    <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                                    <table class="table table-summary">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            
+                                        <% cartData?.product?.forEach((product, index)=> { %>
+                                            <% if(product.productId?.status==true&&!product.productId?.stock<=0){ %>
+                                            <tr>
+
+                                                <td><a href="#">
+                                                        <%=product.productId.name %>
+                                                    </a></td>
+                                                <td>$<%=product?.price%>.00</td>
+                                            </tr>
+                                            <% } %>
+                                        <% }) %>
+
+                                                <tr class="summary-subtotal">
+                                                    <td>Subtotal:</td>
+                                                    <td >$<%= cartData?.Total_price + cartData?.couponDiscount%>.00</td>
+                                                </tr><!-- End .summary-subtotal -->
+
+                                                <tr>
+                                                    <td>Shipping:</td>
+                                                    <td>Free shipping</td>
+                                                </tr>
+                                                <%if(cartData?.couponDiscount>0) {%>
+                                                <tr>
+                                                    <td>Coupon Discount :</td>
+                                                    <td class="text-success ">-$<%=cartData?.couponDiscount %>.00</td>
+                                                </tr>
+                                                <% } %>
+                                                <tr class="summary-total">
+                                                    <td>Total:</td>
+                                                    <td id="totals">$<%= cartData?.Total_price%>.00</td>
+                                                </tr><!-- End .summary-total -->
+                                    </tbody>
+                                    </table><!-- End .table table-summary -->
+                                    <form id="myForm" action="/placeorder" method="post">
+                                    <div class="accordion-summary" id="accordion-payment">
+                                        <div class="card">
+
+                                            <% if(cartData?.Total_price >1000) {%>
+                                            <div class="card-header" id="heading-1">
+                                                <h2 class="card-title">
+
+                                                    <input type="radio" name="peyment" value="Cash on delivery" 
+                                                        class="" disabled>
+                                                    <label class=" text-decoration-line-through ">Cash on delivery</label>
+                                                    <p class="text-danger " style="font-size: 13px;">*Avilable only below $1000</p>
+                                                </h2>
+                                            </div>
+                                            <% }else{ %>
+                                                <div class="card-header" id="heading-1">
+                                                    <h2 class="card-title">
+    
+                                                        <input type="radio" name="peyment" value="Cash on delivery" 
+                                                            class="bg-primary ">
+                                                        <label for="">Cash on delivery</label>
+                                                    </h2>
+                                                </div>
+                                            <% } %>
+                                            <!-- <input type="text" name="" id="" onclick="submit()" hidden > -->
+                                            <!-- End .card-header -->
+                                         
+                                            <br>
+                                            <div class="card-header" id="heading-1">
+                                                <h2 class="card-title">
+
+                                                    <input type="radio" value="online payment" name="peyment" 
+                                                       class="bg-primary ">
+                                                    <label for="online">online payment</label>
+                                                </h2>
+                                            </div><!-- End .card-header -->
+                                            <br>
+                                            <div class="card-header" id="heading-1">
+                                                <h2 class="card-title">
+
+                                                    <input type="radio" value="wallet payment" name="peyment" 
+                                                       class="bg-primary ">
+                                                    <label for="online">Wallet payment</label>
+                                                </h2>
+                                                <p id="dis" class="text-center text-danger  p-1"></p>
+                                            </div>
+                                            <!-- End .card-header -->
+
+                                        </div><!-- End .card -->
+
+
+
+
+
+
+                                        <p hidden id="sweet"><%= msg %></p>
+                                  
+    
+                                            <button onclick="submit1('<%= cartData?.Total_price%>','<%= userdata._id %>')" type="button" id="plce" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                <span class="btn-text">Place Order</span>
+                                                <span class="btn-hover-text">Proceed to Checkout</span>
+                                            </button>
+                                            <p id="d" class="text-danger "></p>
+                                        </div><!-- End .accordion -->
+                                        <br>
+                                        <br>
+                                    </form>
+                            </aside><!-- End .col-lg-3 -->
+                        </div><!-- End .row -->
+                  
+                </div><!-- End .container -->
+            </div><!-- End .checkout -->
+        </div><!-- End .page-content -->
+
+    </main><!-- End .main -->
+
+
+
+        <%- include('../layouts/footbar2') %>
+		<!-- Connect Footer -->
+     
+    </div><!-- End .page-wrapper -->
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<%- include('../layouts/mobview.ejs') %>
+<script>
+const noadres =document.getElementById('sweet')
+if(noadres.textContent=='Please Add your address..!'){
+    Swal.fire({
+  icon: "warning",
+  title: "Oops...",
+  text: "Add your Address..",
+  footer: '<a href="/checkout">Why do I have this issue?</a>'
+});
+}else if(noadres.textContent=='no cart'){
+Swal.fire({
+  icon: "warning",
+  title: "Oops...",
+  text: "Your Cart is empty",
+  footer: '<a href="/products">Why do I have this issue?</a>'                                                                                                                                                           
+});
+}else if(noadres.textContent=='lowstock'){
+Swal.fire({
+  icon: "warning",
+  title: "limit exceed",
+  text: "Your product stock limit is exceed",
+  footer: '<a href="/cart">Fix  this issue?</a>'                                                                                                                                                           
+});
+}else if(noadres.textContent=='limit needed'){
+    Swal.fire({
+  icon: "warning",
+  title: "Minimum Order",
+  text: "Coupon only applicable more than $100",
+  footer: '<a href="/products">Buy more Product</a>'                                                                                                                                                           
+});
+}else if (noadres.textContent=='applied'){
+    const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+})
+Toast.fire({
+  icon: "success",
+  title: "Coupon Applied"
+})
+}else if(noadres.textContent=='used'){
+    const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+})
+Toast.fire({
+  icon: "warning",
+  title: "Already used"
+})
+}else if (noadres.textContent=='expaired'){
+    Swal.fire({
+  icon: "warning",
+  title: "Coupon Expired",
+  text: "This coupon has been Expired ",
+  footer: '<a href="/coupon">Check Available One?</a>'                                                                                                                                                           
+});
+}
+</script>
+
+<script>
+function razor(amount, userId) {
+    const form=document.getElementById('myForm'); 
+            fetch('/razor', {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ amount, userId })
+            }).then(res => res.json()).then(data => {
+                if (data.succes) {
+                    console.log(data)
+                    let options = {
+                                    "key": `${data.key_id}`,
+                                    "amount": `${data.amount}`,
+                                    "currency": "INR",
+                                    "name": "Audix",
+                                    "order_id": `${data.order_id}`,
+                                    "handler": function (response) {
+                                        form.submit();
+                                        
+                                    },
+                                    "profile": {
+                                        "name": `${data.name}`,
+                                        "email": `${data.email}`
+                                    }
+                                }
+
+                    let razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', (response) => {
+                       alert('payment failed')
+                    //    fetch('/failedPayment',{method:'post',headers:{'Content-type':'application/json'}})
+                       razorpayObject.close();
+                    });
+                    razorpayObject.open();
+                }else if(data.emptycart){
+                    Swal.fire({
+                    icon: "warning",
+                    title: "Oops...",
+                    text: "Your Cart is empty",
+                    footer: '<a href="/products">Why do I have this issue?</a>'                                                                                                                                                           
+                    });
+                }else if(data.emptyaddress){
+                        Swal.fire({
+                        icon: "warning",
+                        title: "Oops...",
+                        text: "Add your Address..",
+                        footer: '<a href="/checkout">Why do I have this issue?</a>'
+                        });
+                }
+        })
+}
+
+
+function submit1(amount, userId){
+        const msd = document.getElementById('d')
+        const form=document.getElementById('myForm');
+        const Radio = document.querySelector('input[name="peyment"]:checked');
+
+        if(Radio){
+            msd.textContent=''
+            if(Radio.value=='Cash on delivery'){
+            
+         form.submit()
+
+        }else if(Radio.value=='wallet payment'){
+        
+            const result = document.getElementById('dis')
+            fetch('/walletUse',{method:'put',headers:{'content-type':'application/json'},body:JSON.stringify({total:amount,userid:userId})})
+            .then(res=>res.json())
+            .then(data=>{
+                if(data.notfound){
+                    result.textContent="Update Your Wallet"
+                }else if(data.lowfund){
+                    result.textContent=" inceficient fund , please recharge"
+                }else if(data.emptycart){
+                    result.textContent=""
+                    Swal.fire({
+                    title:'Oops',
+                    text:'Your Cart Is Empty',
+                    icon:'error',
+                    confirmButtonText: 'OK'
+                    })
+                }else if(data.emptyaddress){
+                    result.textContent=""
+                    Swal.fire({
+                    title:'Oops',
+                    text:'Your Address is Empty',
+                    icon:'error',
+                    confirmButtonText: 'OK'
+                    })
+                }else if(data.approved){
+                    form.submit()
+                }
+            })
+        }else{
+            razor(amount, userId)
+        }
+        }else{
+          msd.textContent='Please choose a method'
+        }
+    
+        
+    }
+        // add address
+    function addAddress(id){
+
+        const form = document.getElementById('addform')
+        console.log(form);
+        const formdata = new FormData(form)
+        const address = {}
+        formdata.forEach((val,i)=>{
+            address[i]=val
+    })
+
+    // console.log(address);
+    
+
+    fetch(`/checkoutAdd?id=${id}`,{method:"post",headers: {'Content-Type' : 'application/json'},body:JSON.stringify({address})
+
+}).then(res => res.json()
+    .then(data => {
+        if(data.success){
+            
+            Swal.fire({
+                title:'Address Added',
+                text:'Address Added Successfully',
+                icon:'success',
+                confirmButtonText: 'OK'
+ 
+    })
+    .then((result) => {
+        
+     window.location.href = '/checkout'
+     
+    })
+    }else{
+        Swal.fire({
+            title:'Failed',
+            text:'Address Adding failed',
+            icon:'error',
+            confirmButtonText: 'OK'
+            
+        }).then((result) => {
+            
+            window.location.href = '/checkout'
+            
+        })
+    }
+}))
+
+
+}
+// delete data 
+function deleteAddress(id,addrs){
+
+fetch(`/deleteAddress?id=${id}&&address=${addrs}`,{ method:'post'})
+.then(data =>{
+    window.location.href = '/checkout'
+})
+}
+// adddress chhose
+function addresChoose(id){
+        fetch(`/chooseAddress?id=${id}` , {method : 'post' , headers : {'Content-Type': 'application/json'}})
+
+        window.location.href = '/checkout'
+
+        // $('#reloadDiv').load('/admin/checkout #reloadDiv')
+}
+</script>
+<script>
+
+    function editAddress(input){    
+        const add= document.getElementById('Editaddress')
+        const City = document.getElementById('editcity')
+        const State = document.getElementById('editstate')
+        const pin = document.getElementById('editpincode')
+        const PHONE = document.getElementById('editphone')
+        const Id = document.getElementById('id')
+        console.log(input);
+fetch(`/checkeditaddress`,{method:'put',headers:{'Content-Type':'application/json'},body:JSON.stringify({input})})
+.then(res => res.json())
+.then(data => {
+    const {name,city,state,pincode,phone,_id } = data.Editdata.addresss[0]
+    
+    
+    add.value = name
+    City.value =city
+    State.value =state
+    pin.value = pincode
+    PHONE.value = phone
+    Id.value =_id
+
+
+})
+
+    }
+</script>
+<script>
+     document.addEventListener("DOMContentLoaded", function() {
+        ds(); 
+    });
+    // use
+    function ds(){
+        const iput = document.getElementById('rem')
+        fetch('/displaycoup',{method:'put',headers:{'Content-Type':'application/json'}}).then(res=> res.json())
+        .then(data=>{
+            if(data.coupon){
+                iput.value = data.coupon
+
+            }
+        })
+        
+        }
+    // coupon check 
+    function coup(inp){
+        const msg = document.getElementById('cop')
+        const button = document.getElementById('btc')
+       fetch('/couponApply',{method:'put',headers:{'content-Type':'application/json'},body:JSON.stringify({in:inp.value})}) .then(res => res.json())
+       .then(data => {
+        if(data.found){
+            msg.textContent='Coupon Available '
+            msg.classList.add('text-success')
+            msg.classList.remove('text-danger')
+            button.disabled =false
+        }else if(data.not){
+            msg.textContent='Not Valid Coupon'
+            msg.classList.add('text-danger')
+            msg.classList.remove('text-success')
+            button.disabled=true
+        }
+       })
+    }
+// coupon remove 
+function CouponRe(ordId){
+    fetch('/couponRe',{method:'put',headers:{'Content-Type':'Application/json'},body:JSON.stringify({id:ordId})}).then(()=>{
+        window.location.reload()
+    })
+}
+
+
+
+
+</script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<%- include('../layouts/footer.ejs') %>

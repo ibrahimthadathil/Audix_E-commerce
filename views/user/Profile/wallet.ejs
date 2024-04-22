@@ -1,0 +1,322 @@
+<%- include('../../layouts/header.ejs') %>
+
+
+<div class="page-wrapper">
+	
+	<%- include('../../layouts/navbar.ejs') %>
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">My Profile</h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    
+                    <li class="breadcrumb-item active" aria-current="page">wallet</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="dashboard">
+                <div class="container">
+                    <div class="row">
+                        <aside class="col-md-4 col-lg-3">
+                            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link " id="tab-dashboard-link"  href="/profile" > My Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link " id="tab-orders-link"  href="/orders" >Orders</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-address-link" href="/Address" >Adresses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active " id="tab-wallet-link"  href="/wallet" >Wallet</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-coupons-link" href="/coupon">Coupons</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/logout">Sign Out</a>
+                                </li>
+                            </ul>
+                        </aside><!-- End .col-lg-3 -->
+                        <div class="col-md-8 col-lg-9">
+                          <div class="tab-content">
+                            <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
+                              <div class="wallet">
+                                <h4><i class="ri-wallet-3-fill"></i>My Wallet</h4>
+                                <div class="balance">
+                                  
+                                  <button  class="balance rounded-pill bg-info p-2 border-0 " data-bs-toggle="modal" data-bs-target="#addmoney">Add money</button>
+
+                                  <!-- Add money Modal -->
+                                  <div class="modal fade" id="addmoney" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Topup Wallet <Address></Address></h1>
+                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body p-5">
+                                                <form action="/addMoney" method="post" id="myform">
+                                                <input class="form-control " type="text" placeholder="Enter Amount" id="val" name="topup" oninput="vali(this)" >
+                                                <p class="text-danger  text-center " id="err"></p>
+                                              </form>
+                                                </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn"onclick="addMoney()">Add </button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div> 
+                                  <!--end-->                                  
+                                    <button disabled class="balance rounded-pill bg-success p-2"><i class="ri-wallet-3-fill"></i>$<%= availablebalance?.balance %>.00</button>
+                                </div>
+                                <div class="transaction-table">
+                                 <p id="mg" hidden><%= msg %></p> 
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th colspan="5">Transactions</th>
+                                            </tr>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Date</th>
+                                                <th>Source</th>
+                                                <th>Status</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if(availablebalance){ %>
+                                                <% for(let i=0; i<availablebalance?.transaction.length; i++){ %>
+                                                    <tr>
+                                                        <td><%= i+1 %></td>
+                                                        <td><%= availablebalance.transaction[i].Time.toString().split(' ').slice(0,4).join('  ') %></td>
+                                                        <td class="text-primary "><%= availablebalance.transaction[i].Source %></td>
+                                                        <td class="<%= availablebalance.transaction[i].Status=='Credit'?'text-success ':'text-danger ' %>"><%= availablebalance.transaction[i].Status %></td>
+                                                        <td>$<%= availablebalance.transaction[i].Amount %>.00</td>
+                                                    </tr>
+                                                <% } %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <p class="text-danger text-center">No transactions yet</p>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                         
+                            </aside>
+                          </div>
+                        </div>
+                        
+                    </div><!-- End .row -->
+                    
+                </div><!-- End .container -->
+            </div><!-- End .dashboard -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+
+
+
+    <%- include('../../layouts/footbar2') %>
+    <!-- Connect Footer -->
+    
+</div><!-- End .page-wrapper -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    
+    
+    
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    
+    <%- include('../../layouts/mobview.ejs') %>
+    <script>
+        var errorMessage = document.getElementById("err");
+        var addButton = document.getElementById("btn");
+      if(val.textContent==''){
+        errorMessage.textContent = "Please enter a valid  Amount.";
+            addButton.disabled = true;
+       }
+      function vali(money){
+        const err = document.getElementById('err')
+        const btn = document.getElementById('btn')
+        if(money.value>2000){
+          err.textContent='*Maximum Recahrgable amount is $2000'
+          btn.disabled=true
+        }else{
+          err.textContent=''
+          btn.disabled=false
+        }
+
+        var value = money.value.trim();
+        var errorMessage = document.getElementById("err");
+        var addButton = document.getElementById("btn");
+       
+        // Validate if the input contains only positive numbers
+        if (!/^\d*\.?\d+$/.test(value) || parseFloat(value) <= 0 ) {
+            errorMessage.textContent = "Please enter a valid  amount.";
+            addButton.disabled = true;
+        } else {
+            errorMessage.textContent = "";
+            addButton.disabled = false;
+        }
+    }
+      
+      // add money 
+      function addMoney(){
+        const form = document.getElementById('myform')
+        const n = document.getElementById('val').value   
+        fetch('/walletAdd',{method:'put',headers:{'Content-type':'application/json'},body:JSON.stringify({amt:n})})
+        .then(res => res.json())
+        .then(data => {
+          if(data.success){
+            let options = {
+             "key": `${data.key_id}`,
+             "amount": `${data.amount}`,
+             "currency": "INR",
+             "name": "Audix",
+             "handler": function (response) {
+                 form.submit();
+
+             },
+             "profile": {
+                 "name": `${data.name}`,
+                 "email": `${data.email}`
+             }
+            }
+            let razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', (response) => {
+                      
+                    });
+                    razorpayObject.open();
+          }
+        })   
+      }
+      // add money sweet
+      const msg = document.getElementById('mg')
+      if(msg.textContent.trim()=='topup'){
+        const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+})
+Toast.fire({
+  icon: "success",
+  title: "Wallet Recharged Successfully"
+})
+      }
+
+    </script>
+    <style>
+    .transaction-table {
+    max-height: 300px; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+}
+
+
+
+        body {
+          font-family: Arial, sans-serif;
+          
+        }
+        
+        .wallet {
+          max-width: 600px;
+          margin: 20px auto;
+          padding: 20px;
+          background-color: #a9d89e6e;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .wallet h2 {
+          text-align: center;
+          color: #333;
+        }
+        
+        .wallet .balance {
+          text-align: end;
+          font-size: 15px;
+          color: #fff;
+         
+          margin-bottom: 20px;
+        }
+        
+        .wallet .transactions {
+          list-style: none;
+          padding: 0;
+        }
+        
+        .wallet .transactions li {
+          margin-bottom: 10px;
+          padding: 10px;
+          background-color: #fff;
+          border-radius: 5px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .wallet .transactions li:last-child {
+          margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+          .wallet {
+            padding: 10px;
+          }
+          
+          .wallet h2 {
+            font-size: 20px;
+          }
+          
+          .wallet .balance {
+            font-size: 18px;
+          }
+        }
+      </style>
+    <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          border: 1px solid rgb(80, 79, 79);
+          padding: 8px;
+          text-align: center;
+      }
+      th {
+          background-color: #f2f2f2;
+      }
+  </style>
+  
+    
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+
+
+    <%- include('../../layouts/footer.ejs') %>

@@ -1,0 +1,300 @@
+<%- include('../layouts/adminHeader.ejs') %>
+
+  <div class="container-scroller">
+
+    <%- include('../layouts/adminSidebar.ejs') %>
+
+    <div class="container-fluid page-body-wrapper">
+
+        <%- include('../layouts/adminNavbar.ejs') %>
+
+      <!-- partial -->
+
+        <div class="main-panel">
+
+          <div class="content-wrapper">
+            
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#couponModal">
+                Add Coupon
+              </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="couponModalLabel">Add Coupon</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/admin/addcoupons" id="couponForm" method="post"  enctype="multipart/form-data">
+
+                              <div class="mb-3">
+                                <label for="couponName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="couponName" name="coupon" placeholder="Enter coupon name">
+                                <p id="name" class="text-danger "></p>
+                              </div>
+                              <div class="mb-3">
+                                <label for="couponImage" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="couponImage" name="image" accept="image/*" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="couponCode" class="form-label">Coupon Code</label>
+                                <input type="text" class="form-control" id="couponCode" name="code" placeholder="Enter coupon code">
+                                <p id="code" class="text-danger "></p>
+                              </div>
+                              <div class="mb-3 d-flex ">
+                                <div>
+
+                                  <input type="number" class="form-control w-50 " name="minimum"  id="" placeholder="minimum">
+                                  <p id="min" class="text-danger "></p>
+                                </div>
+                                <div class="ms-3">
+
+                                  <input type="number" class="form-control  w-50 ms-3 " name="maximum"  id="" placeholder="maximum">
+                                  <p id="max" class="text-danger "></p>
+                                </div>
+                              </div>
+                              
+                              <div class="mb-3">
+                                <label for="toDate" class="form-label">Discount</label>
+                                <input type="number" maximum="99" class="form-control"required name="discount" id="toDate">
+                                <p id="disc" class="text-danger "></p>
+                              </div>
+                              <div class="mb-3">
+                                <label for="coupondetails" class="form-label">Details</label>
+                                <input type="text" class="form-control" id="coupondetails" name="details" placeholder="Enter details">
+                                <p id="detail" class="text-danger"></p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="sub">Add Coupon</button>
+                              </div>
+                            </form>
+
+                            
+                          
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--modal end-->
+                    <br><br>
+                    <div class="row">
+                      <% availablecoupon.forEach((element,i) => {%>
+                        
+                      
+                      <div class="col-lg-4 col-md-6 col-sm-12 mt-4 ">
+                          <div class="card position-relative ">
+                              <img src="/product_images/<%= element.image %> " class="card-img-top img-fluid " >
+                           
+                            <div class="card__content ">
+                                
+                                  <p class="card__title text-success "><%= element.name %></p>
+                                  <h6><%= element.discount %>% OFF</h6>
+                                  <p>Coupon Code : <span class="text-info"><%= element.couponcode %></span></p>
+                                  <p class="card__description">This offer is only for first purchase</p>
+                                  <button id="action" class="card__button " onclick="actions('<%= element._id%>')"><%= element.status==true? 'De-activate':"Activate" %></button>
+                                  <button class="card__button secondary btn-outline-danger " onclick="deletecoupon('<%= element._id%>')">Remove</button>
+                                  
+                              </div>
+                          </div>
+                      </div>
+                    
+                      <% }) %>
+                  </div>
+                  
+                  
+           
+
+          </div>
+
+         
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+  document.getElementById('couponForm').addEventListener('submit', function(event) {
+    
+    event.preventDefault();
+    
+    
+    document.getElementById('name').textContent = '';
+    document.getElementById('code').textContent = '';
+    document.getElementById('min').textContent = '';
+    document.getElementById('max').textContent = '';
+    document.getElementById('disc').textContent = '';
+    document.getElementById('detail').textContent = '';
+
+    // Get form inputs
+    var couponName = document.getElementById('couponName').value.trim();
+    var couponCode = document.getElementById('couponCode').value.trim();
+    var minimum = document.getElementsByName('minimum')[0].value.trim();
+    var maximum = document.getElementsByName('maximum')[0].value.trim();
+    var discount = document.getElementById(' ').value.trim();
+    var details = document.getElementById('coupondetails').value.trim();
+
+    // Validation
+    var isValid = true;
+    if (couponName === '') {
+      document.getElementById('name').textContent = 'Coupon name is required';
+      isValid = false;
+    }
+    if (couponCode === '') {
+      document.getElementById('code').textContent = 'Coupon code is required';
+      isValid = false;
+    }
+    if (isNaN(minimum) || minimum === '' || minimum <= 0) {
+      document.getElementById('min').textContent = 'Enter positive number';
+      isValid = false;
+    }
+    if (isNaN(maximum) || maximum === '' || maximum <= 0) {
+      document.getElementById('max').textContent = 'must be a positive number';
+      isValid = false;
+    }
+
+    if (isNaN(discount) || discount === '' || discount < 0 || discount > 99) {
+      document.getElementById('disc').textContent = 'Discount rate maximujm upto 99 %';
+      isValid = false;
+    }
+    if (details === '') {
+      document.getElementById('detail').textContent = 'Details are required';
+      isValid = false;
+    }
+
+    // If form is valid, submit it
+    if (isValid) {
+      event.target.submit();
+    }
+  });
+</script>
+
+  
+
+
+<style>
+  .card {
+  position: relative;
+  width: 350px;
+  aspect-ratio: 16/9;
+  background-color: #353131;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1000px;
+  box-shadow: 0 0 0 5px #ffffff80;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card svg {
+  width: 48px;
+  fill: #333;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+}
+
+.card__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #1e1b1b;
+  transform: rotateX(-90deg);
+  transform-origin: bottom;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover .card__content {
+  transform: rotateX(0deg);
+}
+
+.card__title {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 700;
+}
+
+.card:hover svg {
+  scale: 0;
+}
+
+.card__description {
+  margin: 6px 0 6px;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.card__button {
+  padding: 10px;
+  border-radius: 8px;
+  background:transparent;
+  border: none;
+  border: 1px solid #777;
+
+}
+
+.secondary {
+  background: transparent;
+  color: #a82424;
+  border: 1px solid #777;
+}
+
+</style>
+<script>
+
+  // text change 
+const action = document.getElementById('action')
+if(action.textContent.trim()=='De-activate'){
+  action.classList.add('btn-outline-danger')
+  action.classList.remove('btn-outline-success')
+  
+}else{
+  action.classList.add('btn-outline-success')
+  action.classList.remove('btn-outline-danger')
+}
+// status change
+
+function actions(id){
+  fetch(`/admin/coupenActions/${id}`, { method: 'put'})
+  .then(res=> res.json()
+.then(data=>{
+  if(data.changed){
+    window.location.reload()
+  }
+}))
+}
+
+
+// delete coupon 
+function deletecoupon (id){
+console.log(id);
+fetch(`/admin/deletecoupon/${id}`,{method:'put'})
+}
+
+</script>
+
+
+<%- include('../layouts/adminFooter.ejs') %>
+
+
+
