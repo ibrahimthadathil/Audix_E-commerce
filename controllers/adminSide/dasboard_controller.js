@@ -16,7 +16,7 @@ const loadDashboard = async ( req , res) => {
       const discount = orderCount.reduce((acc,e)=> acc + e.discount,0)
       const  users = await User.find({}).countDocuments()
       const blockuser =await User.find({is_blocked:true}).countDocuments()
-      console.log(discount)
+      
   // top selling product
     const mostProduct = await Order.aggregate([
         { $unwind:'$products'},
@@ -107,10 +107,12 @@ const loadDashboard = async ( req , res) => {
       {
           $limit: 3 
       }
-  ]);
+    ]);
+
         res.render('dashboard',{order:orderCount.length,totalSales,productCount,dmgProduct,mostProduct,mostCate,discount,users,blockuser,topBrand})
         
     } catch (error) {
+
         console.log(error.message);
 
     }
@@ -219,7 +221,7 @@ const chartYear = async (req, res) => {
   
       ]);
   
-      const salesData = Array.from({ length: 12 }, (_, i) => {
+        const salesData = Array.from({ length: 12 }, (_, i) => {
   
         const monthData = monData.find((item) => item._id === i + 1);
   

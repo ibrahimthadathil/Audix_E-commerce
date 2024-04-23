@@ -14,11 +14,12 @@ const securepassword = async(password)=>{
 
         const passwordHash = await bcrypt.hash(password,8)
         return passwordHash
-    } catch (error) {
+
+        } catch (error) {
         
         console.log(error.message);
 
-    }
+        }
 }
 
 // loading admin login
@@ -26,14 +27,15 @@ const securepassword = async(password)=>{
 const loadLogin = async (req,res) =>{
   
     try {
+
         const flash = req.flash('flash')
         res.render('login',{msg:flash})
         
-    } catch (error) {
+        } catch (error) {
         
         console.log(error.message);
 
-    }
+        }
 
 }
 
@@ -45,35 +47,35 @@ const verifyAdmin = async ( req , res ) => {
 
         const bodyEmail = req.body.email
         const passsword = req.body.password
-
-        
         const adminCheck = await User.findOne({email:bodyEmail,is_admin:1})
         
-
         if(adminCheck){
 
             const passwordMatch = await bcrypt.compare(passsword,adminCheck.password)
 
-            if(passwordMatch){
-                req.session.admin = adminCheck._id
-                res.redirect('/admin/dashboard')
+                if(passwordMatch){
+
+                    req.session.admin = adminCheck._id
+                    res.redirect('/admin/dashboard')
+
+                }else{
+
+                    req.flash('flash','Incorrect password')
+                    res.redirect('/admin')
+
+                }
             }else{
-                req.flash('flash','Incorrect password')
-                res.redirect('/admin')
-            }
-        }else{
+
             req.flash('flash','You are not admin')
             res.redirect('/admin')
-        }
-        
 
-       
+            }
         
-    } catch (error) {
+        } catch (error) {
         
         console.log(error.message);
 
-    }
+        }
 
 }
 //load dashboard
@@ -83,10 +85,10 @@ const loadDashboard = async ( req , res) => {
 
         res.render('dashboard')
         
-    } catch (error) {
+        } catch (error) {
         console.log(error.message);
 
-    }
+        }
 }
 
 
@@ -99,14 +101,14 @@ const loadOrders = async ( req , res) => {
         const skip = (page - 1) * limit;
         const totalOrderCount = await Order.countDocuments({});
         const totalPages = Math.ceil(totalOrderCount / limit);
-        const orderData = await Order.find({}).populate('UserId')
-            .skip(skip).limit(limit) .sort({ orderDate:-1});
+        const orderData = await Order.find({}).populate('UserId').skip(skip).limit(limit) .sort({ orderDate:-1});
+
         res.render('orders',{orderData,totalPages,currentPage:page})
         
-    } catch (error) {
-        
+    } catch (error) {  
 
- console.log(error.message)
+    console.log(error.message)
+
     }
 }
 
@@ -182,6 +184,7 @@ const adminCategory = async (req, res) => {
 const adminLogout =async ( req , res ) => {
     
     try {
+
         console.log('gh');
         req.session.admin = undefined
 
@@ -202,8 +205,6 @@ const userAction = async ( req, res) =>{
     try {
         
         const userId =req.params.id
-        //    const user=await User.findOne({_id:userId});
-        //    user.is_blocked=!user.is_blocked;
         const blockedUser = await User.findOne({_id:userId,is_blocked:true})
         const activeUser = await User.findOne({_id:userId,is_blocked:false})
 

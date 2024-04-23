@@ -13,24 +13,30 @@ const cart = async (req, res) => {
       const userdata = await User.findById({ _id: req.session.user._id });
 
       if (req.session.user) {
+
           const userProduct = await Cart.findOne({ userId: req.session.user._id }).populate('product.productId');
 
           if (userProduct) {
+
               for (let product of userProduct.product) {
                   if (!product.productId.status||product.productId.stock<=0) {
                       product.price = 0; 
                   }
               }
+
               const cartData = await Cart.findOne({userId:req.session.user._id}).populate('product.productId')
               const totalPrice = userProduct.product.reduce((acc, product) => acc + product.price, 0);
               let afterCoupon = totalPrice
+
               if(cartData.product.length<=0  ){
+
                 await Cart.findOneAndUpdate({_id:cartData._id},{$set:{couponDiscount:0}})
+
               }
               if (userProduct.couponDiscount>0) {
                
                afterCoupon =totalPrice - userProduct.couponDiscount;
-            }
+              }
              
               const updatedCart = await Cart.findOneAndUpdate(
                   { userId: req.session.user._id },
@@ -39,15 +45,23 @@ const cart = async (req, res) => {
               );
               
               res.render('cart', { login: req.session.user, listedCategory, userProduct, userdata, totalprice: updatedCart.Total_price,cartData });
+
           } else {
+
               res.render('cart', { login: req.session.user, listedCategory, totalprice: 0 });
+
           }
+
       } else {
+
           res.redirect('/login');
+
       }
   } catch (error) {
+
       console.error('Error fetching cart:', error);
       res.status(500).send('Internal Server Error');
+
   }
 }
 
@@ -58,8 +72,8 @@ const addCart = async ( req , res ) => {
          
           const qty = req.body.qty || 1
          
-        const cartProduct = await PRODUCTS.findOne({_id:req.params.id})
-        const exist= await Cart.findOne ({userId:req.session.user._id,product:{$elemMatch:{productId:req.params.id}}})
+          const cartProduct = await PRODUCTS.findOne({_id:req.params.id})
+          const exist= await Cart.findOne ({userId:req.session.user._id,product:{$elemMatch:{productId:req.params.id}}})
 
 
         if(!exist){
@@ -77,7 +91,6 @@ const addCart = async ( req , res ) => {
             const wishlistUpdate = await Wishlist.findOneAndUpdate({ userId: req.session.user._id },{ $pull: { products: { productId: req.params.id } } },{ new: true });
             res.send({success:true})
 
-
         }else{
 
             res.send({exist:true})
@@ -89,11 +102,14 @@ const addCart = async ( req , res ) => {
         
     } catch (error) {
         
+      console.log(error.message);
+
     }
 }
  
 const deleteCart = async (  req , res ) => {
     try {
+
         const user = req.session.user._id
         const cartItem = req.params.id
         const remove = await Cart.findOneAndUpdate({userId:user},{$pull:{product:{productId:cartItem}}})
@@ -101,6 +117,8 @@ const deleteCart = async (  req , res ) => {
 
     } catch (error) {
         
+      console.log(error.message);
+
     }
 }
 //edit cart fetch
@@ -135,8 +153,11 @@ const cartEdit = async (req, res) => {
        
 
     res.send({ success: total });
+
     } catch (err) {
+
       console.log(err.message + "   cart edit ");
+
     }
   };
 
@@ -153,7 +174,7 @@ const cartCount = async ( req , res) =>{
     }else{
       res.send({success:0})
     }
-    // const count = await 
+    
   } catch (error) {
     console.log(error.message + 'cartcount')
   }

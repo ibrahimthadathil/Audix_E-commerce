@@ -27,10 +27,12 @@ const loadHome = async (req, res,next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
 
+    const allProduct = await Products.find({}).populate('category')
+
     if (req.session.user) {
-      res.render("homepage", { login: req.session.user, listedCategory });
+      res.render("homepage", { login: req.session.user, listedCategory ,allProduct});
     } else {
-      res.render("homepage", { listedCategory });
+      res.render("homepage", { listedCategory , allProduct});
     }
   } catch (error) {
     console.log(error.message);
@@ -311,6 +313,7 @@ const generateToken = () => {
 
 const sendOTPmail = async (username, email, sendOtp, res) => {
   try {
+    console.log(username)
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -330,7 +333,7 @@ const sendOTPmail = async (username, email, sendOtp, res) => {
     //send mail
     transporter.sendMail(mailOption, function (error, info) {
       if (error) {
-        console.log("Erro sending mail :- ", error.message);
+        console.log("Error sending mail :- ", error.message);
       } else {
         console.log("Email has been sended :- ", info.response);
       }

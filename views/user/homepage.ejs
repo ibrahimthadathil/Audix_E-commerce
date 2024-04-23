@@ -15,7 +15,7 @@
                                 <h1 class=" text-grey ">Go Beyond The Beat</h1><!-- End .intro-title -->
 
                                 
-    
+                                
                                 <a href="#scroll-to-content" class="btn btn-outline-danger scroll-to">
                                     <span class="text-black">Start scrolling</span>
                                     <i class="icon-long-arrow-down"></i>
@@ -27,10 +27,15 @@
                     <span class="slider-loader text-white"></span><!-- End .slider-loader -->
                 </div><!-- End .intro-slider-container -->
                 
+                <% allProduct.forEach((e,i) => { %>
                 <div class="display-row" id="scroll-to-content">
                     <div class="container-fluid">
                         <div class="row align-items-center">
                             <div class="col-lg-6 order-lg-last">
+                                
+                                    
+                                // Check category names
+
                                 <div class="banner banner-overlay" style="border-radius: 30px;" >
                                     <a href="/">
                                         <img src="assets/images/new/cq5dam.web.600.600 (4).jpeg" style="border-radius: 30px;" alt="Banner">
@@ -56,7 +61,8 @@
                                     
                                     <p class="title-desc">Explore our truly wireless range of earbuds for cable-free music on the go</p><!-- End .title-desc -->
                                 </div><!-- End .heading -->
-    
+                               
+                                   
                                 <div class="row">
                                     <div class="col-lg-8 offset-lg-2">
                                         <div class="row">
@@ -64,7 +70,7 @@
                                                 <div class="product product-4 rounded-3 ">
                                                     <figure class="product-media">
                                                         <a href="/productdetails">
-                                                            <img src="assets/images/new/sony Xm-10000.png" alt="Product image" class="product-image ro" style="height: 20rem; ">
+                                                            <img src="/product_images/<%=e.image[i] %>" alt="Product image" class="product-image ro" style="height: 20rem; ">
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -92,7 +98,7 @@
                                                 <div class="product product-4">
                                                     <figure class="product-media">
                                                         <a href="/productdetails">
-                                                            <img src="assets/images/new/bose quantum.png" alt="Product image" class="product-image" style="height: 20rem">
+                                                            <img src="/product_images/<%=e.image[i+1] %>" alt="Product image" class="product-image" style="height: 20rem">
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -119,6 +125,7 @@
                                                     </div><!-- End .product-body -->
                                                 </div><!-- End .product -->
                                             </div><!-- End .col-sm-6 -->
+                                           
                                         </div><!-- End .row -->
                                     </div><!-- End .col-lg-8 offset-lg-2 -->
                                 </div><!-- End .row -->
@@ -476,6 +483,7 @@
                         </div><!-- End .row -->
                     </div><!-- End .container-fluid -->
                 </div><!-- End .display-row -->
+           <% }); %>
     
                 <div class="mb-2"></div><!-- End .mb-2 -->
     

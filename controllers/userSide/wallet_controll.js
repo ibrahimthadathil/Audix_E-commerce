@@ -11,9 +11,6 @@ const instance = require('../../config/razorpay')
 // load wallet
 const loadWallet = async ( req , res ) => {
     try {
-        
-        
-
         const listedCategory = await category.find({is_listed:true})
         const availablebalance = await Wallet.findOne({userId:req.session.user._id})
         const flash = req.flash('flash')

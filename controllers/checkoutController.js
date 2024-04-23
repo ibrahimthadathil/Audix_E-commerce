@@ -54,14 +54,13 @@ const loadcheckout = async ( req , res ) => {
 const addAddresscheckout = async ( req , res ) => {
 
     try {
-
-       
-
-        const user = req.query.id
         
+        const user = req.query.id
         const getAddress = req.body.address
         const exist = await Address.findOne({userId:user,addresss:{$elemMatch:{name:getAddress.address}}})
+
         if(!exist){
+
          const   newAddress = await Address.findOneAndUpdate( {userId:user},
            { $addToSet:{
             addresss:{ userName:req.session.user.fullname ,
@@ -74,15 +73,22 @@ const addAddresscheckout = async ( req , res ) => {
             }},
              {new:true ,upsert:true}
         )
+
         if(newAddress){
+
             res.send({success:true})
+
         }    
         }else{
+
             res.status(400).send({failed:true})
+
         }
         } catch (error) {
         
-    }
+            console.log(error.message);
+
+        }
 }
 const chooseAddress = async (req, res) => {
     try {
@@ -105,37 +111,50 @@ const chooseAddress = async (req, res) => {
         ])
         
     } catch (error) {
-        
+
+        console.log(error.message);
+
     }
 }
 // edit checkout
 const editCheckout = async ( req ,res ) => {
     try {
+
         const dataId = req.body.input
         const Editdata = await Address.findOne({'addresss._id':dataId},{'addresss.$':1})
         res.json({Editdata})
-        res
+        
     } catch (error) {
+
+        console.log(error.message);
         
     }
 }
 
 const updateAddresscheckout = async ( req ,res ) => {
     try {
+
         const user = req.session.user._id
         const {address,city,state,pincode,phone,id} = req.body
         const updatedata = await Address.findOneAndUpdate({userId:user,'addresss._id':id},{$set:{'addresss.$.name':address,'addresss.$.city':city,'addresss.$.state':state,'addresss.$.pincode':pincode,'addresss.$.phone':phone}})
+        
         if(updatedata){
+
             req.flash('flash','success')
             res.redirect('/checkout')
+            
         }else{
+
             req.flash('flash','failed')
             res.redirect('/checkout')
+
         }
-    } catch (error) {
+        } catch (error) {
+
         console.error('Error updating address:', error);
         return res.status(500).json({ error: 'Internal server error' });
-    }
+        
+        }
 }
 module.exports ={
     loadcheckout,

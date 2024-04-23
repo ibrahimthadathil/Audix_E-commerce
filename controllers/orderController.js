@@ -218,11 +218,9 @@ const cancelOrder = async ( req, res ) => {
             .reduce((total, product) => total + product.price , 0)
             
         if(cancelItem.discountRate>0){
-            // let count=0
-            // if(count>=1){
+          
                 updatedOrderAmount = Math.floor(( updatedOrderAmount )-( updatedOrderAmount * cancelItem.discountRate / 100 ))
-            //     count++
-            // // }
+            
 
         }
         
@@ -245,12 +243,9 @@ const cancelOrder = async ( req, res ) => {
         }
       
         if(cancelItem.discount>0){
-            // let divideRatio = Math.round(cancelItem.discountRate/ cancelItem.products.length)
-            // console.log(divideRatio);
+            
             totalbalance=Math.floor((canceledProduct.price)-(canceledProduct.price * cancelItem.discountRate /100))
-            console.log(totalbalance,' working');
-        //    let d= Math.floor((canceledProduct.price) - (canceledProduct.price*divideRatio/100))
-        //    console.log(d,'     haaaaaaaaaaa');
+        
         }
         
         await wallet.findOneAndUpdate({userId:req.session.user._id},{$inc:{balance:totalbalance},$push:{transaction:{Amount:totalbalance,Status:'Credit',Source:'Canceled Product'}}},{upsert:true,new:true})
@@ -305,48 +300,6 @@ const returnProduct = async ( req , res ) => {
         console.log(error.message)
     }
 }
-// product price after discount coupon 
-const DiscountPro = async ( req , res ) =>{
-    try {
-        
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-// invoice 
-
-// const invoice = async (req, res) => {
-//     try {
-//         if (req.params.id) {
-//             const uuidb = uuid()
-//             const orderDta = await order.findOne({ _id: req.params.id }).populate('products.productId UserId')
-//             const inv = invoiceConfig(orderDta)
-//             const result = await easyinvoice.createInvoice(inv);
-//             console.log('hhhhhh');
-//             const filePath = path.join(__dirname, '../public/files', `invoice_${uuidb}.pdf`);
-//             console.log('hhhhhh');
-//             await fs.writeFileSync(filePath, result.pdf, 'base64');
-//             console.log('hhhhhh');
-
-//             res.download(filePath, `invoice_${uuidb}.pdf`, (err) => {
-                
-//                 if (!err) {
-//                     fs.unlinkSync(filePath);
-                    
-//                 } else {
-//                     console.error(err);
-//                 }
-//             });
-//             console.log('hhhhhh');
-//         } else {
-//             res.status(404).send('Invoice ID not provided');
-//         }
-        
-//     } catch (err) {
-//         console.log(err.message + '     invoice')
-//     }
-// }
 
 const invoiced = async ( req , res ) => {
     try {
@@ -370,7 +323,5 @@ orderDetails,
 razor,
 cancelOrder,
 returnProduct,
-DiscountPro,
-// invoice,
 invoiced
 }

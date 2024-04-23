@@ -208,9 +208,6 @@ user_routers.post("/placeorder", order_controller.orderplace);
 // user_router
 user_routers.get("/orderDetails", order_controller.orderDetails);
 
-// order details product price after discount 
-user_routers.put('/totaldiscprice',order_controller.DiscountPro)
-
 // search product
 user_routers.put('/searchProduct',product_controller.searchProduct)
 

@@ -84,7 +84,7 @@ const customReport = async ( req , res ) => {
                 $elemMatch: {orderProStatus: 'delivered'}
             }
         });
-        console.log(getData);
+        
 
         res.send({ getData });
 
