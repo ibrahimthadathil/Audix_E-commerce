@@ -30,7 +30,7 @@ const loadOrder = async ( req , res ) => {
             const userAddress = await Address.findOne({userId:req.session.user._id})
             const orderData = await Order.find({UserId:req.session.user._id}).skip(skip)
             .limit(limit); 
-            res.render('profile/orders',{listedCategory,login:req.session.user,userAddress,orderData,currentPage: page, totalPages,})
+            res.render('Profile/orders',{listedCategory,login:req.session.user,userAddress,orderData,currentPage: page, totalPages,})
         }else{
             res.redirect('/login')
         }
