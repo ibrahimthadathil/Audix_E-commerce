@@ -31,7 +31,7 @@ const profileLoad = async ( req , res ) => {
         if(req.session.user){
             
            const flash= req.flash('flash')
-            res.render('profile/profile',{listedCategory,products,login:req.session.user,userdata,msg:flash})
+            res.render('Profile/profile',{listedCategory,products,login:req.session.user,userdata,msg:flash})
         }else{
             
             res.redirect('/login')
