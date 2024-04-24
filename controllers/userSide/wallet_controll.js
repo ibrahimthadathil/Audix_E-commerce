@@ -16,7 +16,7 @@ const loadWallet = async ( req , res ) => {
         const flash = req.flash('flash')
         if(req.session.user){
 
-            res.render('profile/wallet',{login:req.session.user,listedCategory,availablebalance,msg:flash}) 
+            res.render('Profile/wallet',{login:req.session.user,listedCategory,availablebalance,msg:flash}) 
         }else{
             res.redirect('/login')
         }

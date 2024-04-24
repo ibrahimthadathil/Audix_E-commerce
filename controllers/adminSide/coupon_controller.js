@@ -14,10 +14,10 @@ const UserCoupon = async (req ,res ,next) => {
 
             const availableCoupon = await Coupons.find({status:true})
 
-            res.render('profile/userCoupons',{listedCategory,login:req.session.user,coupon:availableCoupon})
+            res.render('Profile/userCoupons',{listedCategory,login:req.session.user,coupon:availableCoupon})
         }else{
 
-            res.render('profile/userCoupons',{listedCategory})
+            res.redirect('/login')
 
         }
     } catch (error) {

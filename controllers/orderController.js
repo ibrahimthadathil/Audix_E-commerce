@@ -147,7 +147,7 @@ const orderDetails = async (req , res)=>{
            const order = await Order.findOne({_id:req.query.id}).populate('products.productId');
            
            
-           res.render('profile/orderDetails', { login: req.session.user, order, listedCategory});
+           res.render('Profile/orderDetails', { login: req.session.user, order, listedCategory});
        }else{
         res.redirect('/login')
        }
@@ -307,7 +307,7 @@ const invoiced = async ( req , res ) => {
 
             const invoicedata = await Order.find({_id:req.params.id}).populate('products.productId UserId')
             const currentDate = new Date().toString().split(' ').slice(0,4).join('  ')
-            res.render('profile/invoice',{invoicedata,currentDate})
+            res.render('Profile/invoice',{invoicedata,currentDate})
         }else{
             res.redirect('/login')
         }

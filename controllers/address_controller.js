@@ -13,7 +13,7 @@ const loadAddress = async (req, res) => {
             const addressList = await Address.findOne({userId:req.session.user._id}) || null
             const flash = req.flash('flash')
 
-            res.render('profile/address',{listedCategory,userdata,login:req.session.user,addressList,msg:flash}) 
+            res.render('Profile/address',{listedCategory,userdata,login:req.session.user,addressList,msg:flash}) 
 
         }else{
 
