@@ -81,7 +81,7 @@
                                                 <form  style="padding-left: 15px;padding-right: 15px;"  id="addform">
                                                     <div class="mb-3">
                                                         <label for="address" class="col-form-label text-black">Address :</label>
-                                                        <input type="text" class="form-control" name="address"  id="address" placeholder="Enter your Address">
+                                                        <input type="text" class="form-control" name="address"  id="address" placeholder="Enter your Address" required>
                                                         <div class="h-25"><p class="text-danger " id="errAD"></p></div>
                                                     </div>
                                                     
@@ -111,14 +111,14 @@
                                                     </div>
                                                     
                                                     
+                                                        <p class="text-danger text-center" id="err"></p>
                                                 </form>
                                                 <div class="modal-footer">
                                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                   <button type="submit" class="btn btn-primary"  id="submitBtn" onclick="addAddress('<%= userdata._id %>')">Add</button>
                                                 </div>
-                                              
                                               </div>
-
+ 
 
                                             </div>
                                           </div>
@@ -143,11 +143,11 @@
                                                     <!-- <button type="button"   > -->
                                                         
                                                     <!-- </button> -->
-                                                    <button type="button" class="close" aria-label="Close" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="font-size: 25px;padding-bottom: 20px;">
+                                                    <button type="button" class="close" aria-label="Close" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= i %>" style="font-size: 25px;padding-bottom: 20px;">
                                                         <span aria-hidden="true">&times;</span>
                                                       </button>
                                                         <!-- Modal for Delete ASddress-->
-                                                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="staticBackdrop<%= i %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -296,14 +296,22 @@
         }
     });
 </script> -->
-
+<script>
+    
+</script>
 
 
 <script>
     // add address
     function addAddress(id){
         const form = document.getElementById('addform')
-        const formdata = new FormData(form)
+        const g=form.querySelectorAll('input')
+        let flag=true
+        g.forEach(e=>{
+            if(e.value.trim()=='') return flag=false;
+        })
+        if(flag){
+            const formdata = new FormData(form)
         const address = {}
         formdata.forEach((val,i)=>{
             address[i]=val
@@ -342,6 +350,11 @@
     }
 }))
 
+        }else{
+            const di = document.getElementById('err')
+            di.textContent="  *fill the filed"
+        }
+    
 
 }
 
@@ -372,24 +385,7 @@ fetch(`/editaddresss`,{method:'put',headers:{'Content-Type':'application/json'},
 console.log(add.value,City.value,State.value+'ghgh');
 }
 
-// // data validation 
-// const button = document.getElementById('submitBtn')
-//  button.disabled = true  
-// function validation(e){
-//     const err =document.getElementById('errAD')
 
-//     let addressRegex = /^[A-Za-z\s]+$/;
-//     if(e.value.length>4){
-       
-//        err.textContent=''
-//        button.disabled = false 
-       
-//     }else{
-//         err.textContent='minimum 4 required'
-//         return false
-//     }
-    
-// }
 function deleteAddress(id,addrs){
 
 fetch(`/deleteAddress?id=${id}&&address=${addrs}`,{ method:'post'})
