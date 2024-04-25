@@ -93,45 +93,14 @@
                         
                     </div><!-- End .col-lg-9 -->
                    
-                    <aside class="col-lg-3 order-lg-first">
+                    <form class="col-lg-3 order-lg-first">
                         <div class="sidebar sidebar-shop">
                             <div class="widget widget-clean">
                                 <label>Filters:</label>
-                                <a href="#" class="sidebar-filter-clear">Clean All</a>
+                                <button type="reset" class="border-0 bg-transparent text-primary  sidebar-filter-clear">Clean All</button>
                             </div><!-- End .widget widget-clean -->
 
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
-                                        Category
-                                    </a>
-                                </h3><!-- End .widget-title -->
-
-                            <div class="collapse show" id="widget-1">
-                                    <div class="widget-body">
-                                        <div class="filter-items filter-items-count">
-                                           
-                                                <% listedCategory.forEach(value => { %>
-                                    
-                                                     <div class="filter-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="cat-7">
-                                                        <label class="custom-control-label" for="cat-7"><%= value.name %></label>
-                                                    </div><!-- End .custom-checkbox -->
-                                                    <span class="item-count">1</span>
-
-                                                </div><!-- End .filter-item -->
-                                             <%  }); %>
-
-                                           
-                                        
-                                    <!-- </div>End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-
-                           
-
-                           
+                            <div class="widget widget-collapsible">  
 
                             <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
@@ -143,19 +112,15 @@
                                 <div class="collapse show" id="widget-4">
                                     <div class="widget-body">
                                         <div class="filter-items">
+                                            <% brands.forEach((e,i)=>{ %>
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-1">
-                                                    <label class="custom-control-label" for="brand-1">Sony</label>
+                                                    <input data-product="<%= JSON.stringify(product) %>" onchange="brand(this,'<%=e.name  %>')" type="checkbox" class="custom-control-input" id="brand-<%=i+1  %>">
+                                                    <label class="custom-control-label" for="brand-<%=i+1  %>"><%=e.name  %></label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
-
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="brand-2">
-                                                    <label class="custom-control-label" for="brand-2">Bose</label>
-                                                </div><!-- End .custom-checkbox -->
-                                            </div><!-- End .filter-item -->
+<% }) %>
+                                       
 
                                             
 
@@ -222,7 +187,7 @@
                                 </div>
                             </div>
                         </div><!-- End .sidebar sidebar-shop -->
-                    </aside><!-- End .col-lg-3 -->
+                    </form><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
                 
             </div><!-- End .container -->
@@ -241,6 +206,96 @@
 console.log('sgsgsgg')
 let flag=0;
 var result = document.getElementById('result')
+
+function brand(e,name){
+    const checkboxes = document.querySelectorAll('.custom-control-input');
+
+// Iterate through each checkbox
+checkboxes.forEach((cb) => {
+    // If it's not the current checkbox, uncheck it
+    if (cb !== e) {
+        cb.checked = false;
+    }
+});
+    const pro=JSON.parse(e.dataset.product)
+    if(e.checked){
+        const arr = pro.filter((product) => product.brand === name);
+                result.innerHTML= `${arr.map((product,i) => (`
+                    <div id="cards" class="col-6 col-md-4 col-lg-4 ">
+            <div class="product product-7 text-center">
+                <figure class="product-media">
+                    <span class="product-label label-new">New</span>
+                    <a href='/productdetails?id=${product._id}'>
+                        <img src="/product_images/${product.image[0]}" alt="Product image" class="product-image">
+                    </a>
+
+                    <div class="product-action-vertical">
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    </div><!-- End .product-action-vertical -->
+                    <input hidden value="${product.stock}" id="stock">
+                    <div class="product-action">
+                        <button onclick="addCart('${product._id}')" id="btns" class="btn-product btn-cart border-0 " style="cursor: pointer;"><span id="crt">add to cart</span></button>
+                    </div><!-- End .product-action -->
+                </figure><!-- End .product-media -->
+
+                <div class="product-body">
+                    <div class="product-cat">
+                        <a href="#">${product.name}</a>
+                    </div><!-- End .product-cat -->
+                    <h3 class="product-title"><a href="/products">${product.category.name}</a></h3><!-- End .product-title -->
+                    <div class="product-price">
+                        $${product.price}.00
+                    </div><!-- End .product-price -->
+                    <div class="ratings-container">
+                        <div class="ratings">
+                            <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                        </div><!-- End .ratings -->
+                        <span class="ratings-text">( 2 Reviews )</span>
+                    </div><!-- End .rating-container -->
+                </div><!-- End .product-body -->
+            </div><!-- End .product -->
+        </div>
+                    `)).join('')}`;
+
+    }else{
+        result.innerHTML= `${pro.map((product,i) => (`
+                    <div id="cards" class="col-6 col-md-4 col-lg-4 ">
+            <div class="product product-7 text-center">
+                <figure class="product-media">
+                    <span class="product-label label-new">New</span>
+                    <a href='/productdetails?id=${product._id}'>
+                        <img src="/product_images/${product.image[0]}" alt="Product image" class="product-image">
+                    </a>
+
+                    <div class="product-action-vertical">
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    </div><!-- End .product-action-vertical -->
+                    <input hidden value="${product.stock}" id="stock">
+                    <div class="product-action">
+                        <button onclick="addCart('${product._id}')" id="btns" class="btn-product btn-cart border-0 " style="cursor: pointer;"><span id="crt">add to cart</span></button>
+                    </div><!-- End .product-action -->
+                </figure><!-- End .product-media -->
+
+                <div class="product-body">
+                    <div class="product-cat">
+                        <a href="#">${product.name}</a>
+                    </div><!-- End .product-cat -->
+                    <h3 class="product-title"><a href="/products">${product.category.name}</a></h3><!-- End .product-title -->
+                    <div class="product-price">
+                        $${product.price}.00
+                    </div><!-- End .product-price -->
+                    <div class="ratings-container">
+                        <div class="ratings">
+                            <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                        </div><!-- End .ratings -->
+                        <span class="ratings-text">( 2 Reviews )</span>
+                    </div><!-- End .rating-container -->
+                </div><!-- End .product-body -->
+            </div><!-- End .product -->
+        </div>
+                    `)).join('')}`;
+    }
+   }
 function Ascend(e){
     const pro=JSON.parse(e.dataset.product)
     const g= pro.sort((a,b)=>{
@@ -612,6 +667,10 @@ Toast.fire({
                     `)).join('')}`
                     const sort=document.getElementById('sort')
                     const sortDE=document.getElementById('sortDE')
+                    const brand1=document.getElementById('brand-1')
+                    const brand2=document.getElementById('brand-2')
+                    brand1.dataset.product=JSON.stringify(data)
+                    brand2.dataset.product=JSON.stringify(data)
                     sort.dataset.product=JSON.stringify(data)
                     sortDE.dataset.product=JSON.stringify(data)
             }
@@ -677,6 +736,10 @@ function pricefilter(){
                     `)).join('')}`
                     const sort=document.getElementById('sort')
                     const sortDE=document.getElementById('sortDE')
+                    const brand1=document.getElementById('brand-1')
+                    const brand2=document.getElementById('brand-2')
+                    brand1.dataset.product=JSON.stringify(data)
+                    brand2.dataset.product=JSON.stringify(data)
                     sort.dataset.product=JSON.stringify(data.cards)
                     sortDE.dataset.product=JSON.stringify(data.cards)
         }

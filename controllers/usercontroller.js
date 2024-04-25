@@ -12,6 +12,7 @@ const category = require("../models/category");
 const Products = require("../models/product");
 const { find } = require("../models/whishlist");
 const whishlist = require("../models/whishlist");
+const BrandsMod = require("../models/Brand")
 
 const securepassword = async (password) => {
   try {
@@ -523,6 +524,7 @@ const loadProducts = async (req, res,next) => {
     const totaluserCount = await Products.countDocuments({ status : true });
     const totalPages = Math.ceil(totaluserCount / limit);
 
+    const brands = await BrandsMod.find({})
     const listedCategory = await category.find({ is_listed: true });
 
     const products = await Products.find({ status: true }).populate("category")
@@ -533,9 +535,9 @@ const loadProducts = async (req, res,next) => {
 
     if (req.session.user) {
       const flash = req.flash('flash')
-      res.render("products", {login: req.session.user,listedCategory, product,msg:flash,currentPage: page, totalPages});
+      res.render("products", {login: req.session.user,listedCategory, product,msg:flash,currentPage: page, totalPages,brands});
     } else {
-      res.render("products", { listedCategory, product ,msg:flash,currentPage: page, totalPages});
+      res.render("products", { listedCategory, product ,msg:flash,currentPage: page, totalPages,brands});
     }
   } catch (error) {
     console.log(error.message);
