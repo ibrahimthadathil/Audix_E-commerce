@@ -204,7 +204,7 @@
                             </td>
 
                             <td class="price-col" id="nn">
-                              $<%=product.price%>
+                              $<%=product.price - order?.discount /order.products.length%>
                               <% if(order?.discount>0) {%>
                                 <p class="text-success " style="font-size: 12px;">coupon applied*</p>
                                 <% } %>

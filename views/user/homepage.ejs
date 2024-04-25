@@ -27,14 +27,14 @@
                     <span class="slider-loader text-white"></span><!-- End .slider-loader -->
                 </div><!-- End .intro-slider-container -->
                 
-                <% allProduct.forEach((e,i) => { %>
+                
                 <div class="display-row" id="scroll-to-content">
                     <div class="container-fluid">
                         <div class="row align-items-center">
                             <div class="col-lg-6 order-lg-last">
                                 
                                     
-                                // Check category names
+                               
 
                                 <div class="banner banner-overlay" style="border-radius: 30px;" >
                                     <a href="/">
@@ -51,7 +51,7 @@
                                         </ul>
     
                                         <div class="banner-text text-brightblack">$98.00 - $1,298.00</div><!-- End .banner-text -->
-                                        <a href="#" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
+                                        <a href="/products" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
                                     </div><!-- End .banner-content -->
                                 </div><!-- End .banner -->
                             </div><!-- End .col-lg-6 -->
@@ -70,7 +70,7 @@
                                                 <div class="product product-4 rounded-3 ">
                                                     <figure class="product-media">
                                                         <a href="/productdetails">
-                                                            <img src="/product_Images/<%=e.image[i] %>" alt="Product image" class="product-image ro" style="height: 20rem; ">
+                                                            <img src="/product_images/<%=allProduct[2].image[0]%>" alt="Product image" class="product-image ro" style="height: 20rem; ">
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -98,7 +98,7 @@
                                                 <div class="product product-4">
                                                     <figure class="product-media">
                                                         <a href="/productdetails">
-                                                            <img src="/product_Images/<%=e.image[i+1] %>" alt="Product image" class="product-image" style="height: 20rem">
+                                                            <img src="/product_images/<%=allProduct[3].image[0]%>%>" alt="Product image" class="product-image" style="height: 20rem">
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -154,7 +154,7 @@
                                         </ul>
     
                                         <div class="banner-text text-darkblack">$20.00 - $96.00</div><!-- End .banner-text -->
-                                        <a href="#" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
+                                        <a href="/products" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
                                     </div><!-- End .banner-content -->
                                 </div><!-- End .banner -->
                             </div><!-- End .col-lg-6 -->
@@ -165,13 +165,13 @@
                                     <p class="title-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.</p><!-- End .title-desc -->
                                 </div><!-- End .heading -->
     
-                                <div class="row">
+                                <div class="row d-flex justify-content-center ">
                                     <div class="col-6 col-md-4">
                                         <div class="product product-4">
                                             <figure class="product-media">
                                                 <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-3.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-3-2.jpg" alt="Product image" class="product-image-hover">
+                                                    <img src="/product_images/<%=allProduct[0].image[0]%>%>" alt="Product image" class="product-image">
+                                                   
                                                 </a>
     
                                                 <div class="product-action-vertical">
@@ -198,8 +198,8 @@
                                         <div class="product product-4">
                                             <figure class="product-media">
                                                 <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-4.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-4-2.jpg" alt="Product image" class="product-image-hover">
+                                                    <img src="/product_images/<%=allProduct[1].image[0]%>%>" alt="Product image" class="product-image">
+                                                   
                                                 </a>
     
                                                 <div class="product-action-vertical">
@@ -222,38 +222,7 @@
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 -->
     
-                                    <div class="col-6 col-md-4">
-                                        <div class="product product-4">
-                                            <figure class="product-media">
-                                                <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-5.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-5-2.jpg" alt="Product image" class="product-image-hover">
-                                                </a>
-    
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                                </div><!-- End .product-action -->
-    
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                                </div><!-- End .product-action -->
-                                            </figure><!-- End .product-media -->
-    
-                                            <div class="product-body">
-                                                <h3 class="product-title"><a href="product.html">Gold colour textured doorknocker</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    $96.00
-                                                </div><!-- End .product-price -->
-    
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" class="active" style="background: #99523e;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
-                                            </div><!-- End .product-body -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 -->
+                                   
                                 </div><!-- End .row -->
                             </div><!-- End .col-lg-6 -->
                         </div><!-- End .row -->
@@ -282,7 +251,7 @@
                                         </ul>
     
                                         <div class="banner-text text-brightblack">$130.00 - $358.00</div><!-- End .banner-text -->
-                                        <a href="#" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
+                                        <a href="/products" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
                                     </div><!-- End .banner-content -->
                                 </div><!-- End .banner -->
                             </div><!-- End .col-lg-6 -->
@@ -293,13 +262,13 @@
                                     <p class="title-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.</p><!-- End .title-desc -->
                                 </div><!-- End .heading -->
     
-                                <div class="row">
+                                <div class="row d-flex  justify-content-center ">
                                     <div class="col-6 col-md-4">
                                         <div class="product product-4">
                                             <figure class="product-media">
                                                 <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-6.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-6-2.jpg" alt="Product image" class="product-image-hover">
+                                                    <img src="/product_images/<%=allProduct[0].image[2]%>%>" alt="Product image" class="product-image">
+                                                    
                                                 </a>
     
                                                 <div class="product-action-vertical">
@@ -326,8 +295,8 @@
                                         <div class="product product-4">
                                             <figure class="product-media">
                                                 <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-7.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-7-2.jpg" alt="Product image" class="product-image-hover">
+                                                    <img src="/product_images/<%=allProduct[1].image[2]%>%>" alt="Product image" class="product-image">
+                                               
                                                 </a>
     
                                                 <div class="product-action-vertical">
@@ -350,38 +319,7 @@
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 -->
     
-                                    <div class="col-6 col-md-4">
-                                        <div class="product product-4">
-                                            <figure class="product-media">
-                                                <a href="product.html">
-                                                    <img src="assets/images/demos/demo-15/products/product-8.jpg" alt="Product image" class="product-image">
-                                                    <img src="assets/images/demos/demo-15/products/product-8-2.jpg" alt="Product image" class="product-image-hover">
-                                                </a>
-    
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                                </div><!-- End .product-action -->
-    
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                                </div><!-- End .product-action -->
-                                            </figure><!-- End .product-media -->
-    
-                                            <div class="product-body">
-                                                <h3 class="product-title"><a href="product.html">Cece Medium Leather Shoulder Bag</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    $358.00
-                                                </div><!-- End .product-price -->
-    
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" class="active" style="background: #333;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #c55858;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
-                                            </div><!-- End .product-body -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 -->
+                                  
                                 </div><!-- End .row -->
                             </div><!-- End .col-lg-6 -->
                         </div><!-- End .row -->
@@ -407,7 +345,7 @@
                                         </ul>
     
                                         <div class="banner-text text-darkblack">$36.00 - $120.00</div><!-- End .banner-text -->
-                                        <a href="#" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
+                                        <a href="/products" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
                                     </div><!-- End .banner-content -->
                                 </div><!-- End .banner -->
                             </div><!-- End .col-lg-6 -->
@@ -425,8 +363,8 @@
                                                 <div class="product product-4">
                                                     <figure class="product-media">
                                                         <a href="product.html">
-                                                            <img src="assets/images/demos/demo-15/products/product-9.jpg" alt="Product image" class="product-image">
-                                                            <img src="assets/images/demos/demo-15/products/product-9-2.jpg" alt="Product image" class="product-image-hover">
+                                                            <img src="/product_images/<%=allProduct[4].image[0]%>%>"alt="Product image" class="product-image">
+                                                            
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -453,8 +391,7 @@
                                                 <div class="product product-4">
                                                     <figure class="product-media">
                                                         <a href="product.html">
-                                                            <img src="assets/images/demos/demo-15/products/product-10.jpg" alt="Product image" class="product-image">
-                                                            <img src="assets/images/demos/demo-15/products/product-10-2.jpg" alt="Product image" class="product-image-hover">
+                                                            <img src="/product_images/<%=allProduct[5].image[0]%>%>" alt="Product image" class="product-image">
                                                         </a>
     
                                                         <div class="product-action-vertical">
@@ -483,7 +420,7 @@
                         </div><!-- End .row -->
                     </div><!-- End .container-fluid -->
                 </div><!-- End .display-row -->
-           <% }); %>
+          
     
                 <div class="mb-2"></div><!-- End .mb-2 -->
     
