@@ -12,7 +12,7 @@ const category = require("../models/category");
 const Products = require("../models/product");
 const { find } = require("../models/whishlist");
 const whishlist = require("../models/whishlist");
-const BrandsMod = require("../models/Brand")
+const BrandsMod = require("../models/Brand");
 
 const securepassword = async (password) => {
   try {
@@ -24,16 +24,20 @@ const securepassword = async (password) => {
 };
 //***************Load home**************
 
-const loadHome = async (req, res,next) => {
+const loadHome = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
 
-    const allProduct = await Products.find({}).populate('category')
+    const allProduct = await Products.find({}).populate("category");
 
     if (req.session.user) {
-      res.render("homepage", { login: req.session.user, listedCategory ,allProduct});
+      res.render("homepage", {
+        login: req.session.user,
+        listedCategory,
+        allProduct,
+      });
     } else {
-      res.render("homepage", { listedCategory , allProduct});
+      res.render("homepage", { listedCategory, allProduct });
     }
   } catch (error) {
     console.log(error.message);
@@ -42,7 +46,7 @@ const loadHome = async (req, res,next) => {
 
 //*********load signup */
 
-const loadsignup = async (req, res,next) => {
+const loadsignup = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
     const flash = req.flash("flash");
@@ -55,7 +59,7 @@ const loadsignup = async (req, res,next) => {
 
 //********Load login**********/
 
-const loadlogin = async (req, res,next) => {
+const loadlogin = async (req, res, next) => {
   try {
     delete req.session.forgetData;
 
@@ -67,7 +71,7 @@ const loadlogin = async (req, res,next) => {
 };
 //***************load forgot passs */
 
-const loadforgot = async (req, res,next) => {
+const loadforgot = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
     const flash = req.flash("flash");
@@ -76,7 +80,7 @@ const loadforgot = async (req, res,next) => {
 };
 
 /***********verify forget */
-const verifyforgot = async (req, res,next) => {
+const verifyforgot = async (req, res, next) => {
   try {
     forgetemail = req.body.email;
     const emailcheck = await User.findOne({ email: forgetemail });
@@ -144,7 +148,7 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
 
 //****loadpassmatch-forgot */
 
-const passmatch = async (req, res,next) => {
+const passmatch = async (req, res, next) => {
   try {
     const email = req.query.email;
 
@@ -155,7 +159,7 @@ const passmatch = async (req, res,next) => {
 };
 
 //**********confirm password */
-const passmatchsave = async (req, res,next) => {
+const passmatchsave = async (req, res, next) => {
   try {
     const email = req.body.email;
     const passwordbdy = req.body.password;
@@ -163,7 +167,7 @@ const passmatchsave = async (req, res,next) => {
     const hashpassword = await securepassword(confirmpass);
 
     if (passwordbdy == confirmpass) {
-      delete req.session.otp 
+      delete req.session.otp;
       const updateuser = await User.findOneAndUpdate(
         { email: email },
         { $set: { password: hashpassword } }
@@ -179,7 +183,7 @@ const passmatchsave = async (req, res,next) => {
 };
 //***********verifyLogin******** */
 
-const verifylogin = async (req, res,next) => {
+const verifylogin = async (req, res, next) => {
   try {
     const email = req.body.email;
 
@@ -198,7 +202,7 @@ const verifylogin = async (req, res,next) => {
       res.redirect("/login");
     } else if (verifiedUser) {
       const passsword = req.body.password;
-      
+
       const passwordMatch = await bcrypt.compare(
         passsword,
         verifiedUser.password
@@ -206,7 +210,6 @@ const verifylogin = async (req, res,next) => {
 
       if (passwordMatch) {
         req.session.user = verifiedUser;
-        
 
         res.redirect("/");
       } else {
@@ -224,7 +227,7 @@ const verifylogin = async (req, res,next) => {
 
 // insert user
 
-const insertUser = async (req, res,next) => {
+const insertUser = async (req, res, next) => {
   try {
     const bodyEmail = req.body.email;
 
@@ -314,7 +317,7 @@ const generateToken = () => {
 
 const sendOTPmail = async (username, email, sendOtp, res) => {
   try {
-    console.log(username)
+    console.log(username);
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -353,7 +356,7 @@ const sendOTPmail = async (username, email, sendOtp, res) => {
   }
 };
 
-const loadotpVerify = async (req, res,next) => {
+const loadotpVerify = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
     if (req.session.otp) {
@@ -372,7 +375,7 @@ const loadotpVerify = async (req, res,next) => {
 
 // verify the otp
 
-const verifyOTP = async (req, res,next) => {
+const verifyOTP = async (req, res, next) => {
   try {
     const userSession = req.session.saveUser;
     const getQueryEmail = req.body.email;
@@ -438,7 +441,7 @@ const verifyOTP = async (req, res,next) => {
 
 // resend -OTP
 
-const resendOtp = async (req, res,next) => {
+const resendOtp = async (req, res, next) => {
   try {
     const re_otpMail = req.query.email;
 
@@ -459,24 +462,22 @@ const resendOtp = async (req, res,next) => {
     }
   } catch (error) {
     console.log(error.message);
-    next()
+    next();
   }
 };
 
 // logout user
-const logoutUser = async (req, res,next) => {
+const logoutUser = async (req, res, next) => {
   try {
     req.session.user = undefined;
     res.redirect("/");
   } catch (error) {
     console.log(error.message);
-    next()
+    next();
   }
 };
 
-
-
-const loadCategory = async (req, res,next) => {
+const loadCategory = async (req, res, next) => {
   try {
     const id = req.params.id;
     const categoryName = id.replace(/%20/g, " ");
@@ -509,35 +510,49 @@ const loadCategory = async (req, res,next) => {
       res.render("category", { listedCategory, product });
     }
   } catch (error) {
-    next()
+    next();
   }
 };
 
 // load products userSide
 
-const loadProducts = async (req, res,next) => {
-
+const loadProducts = async (req, res, next) => {
   try {
-    const limit =  6;
-    const page = parseInt(req.query.page) || 1
-    const skip = (page - 1) * limit
-    const totaluserCount = await Products.countDocuments({ status : true });
+    const limit = 6;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+    const totaluserCount = await Products.countDocuments({ status: true });
     const totalPages = Math.ceil(totaluserCount / limit);
 
-    const brands = await BrandsMod.find({})
+    const brands = await BrandsMod.find({});
     const listedCategory = await category.find({ is_listed: true });
 
-    const products = await Products.find({ status: true }).populate("category")
-    .skip(skip)
-    .limit(limit);
-    const product = products.filter(product => product.category.is_listed)
-    
+    const products = await Products.find({ status: true })
+      .populate("category")
+      .skip(skip)
+      .limit(limit);
+    const product = products.filter((product) => product.category.is_listed);
 
     if (req.session.user) {
-      const flash = req.flash('flash')
-      res.render("products", {login: req.session.user,listedCategory, product,msg:flash,currentPage: page, totalPages,brands});
+      const flash = req.flash("flash");
+      res.render("products", {
+        login: req.session.user,
+        listedCategory,
+        product,
+        msg: flash,
+        currentPage: page,
+        totalPages,
+        brands,
+      });
     } else {
-      res.render("products", { listedCategory, product ,msg:flash,currentPage: page, totalPages,brands});
+      res.render("products", {
+        listedCategory,
+        product,
+        msg: flash,
+        currentPage: page,
+        totalPages,
+        brands,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -545,7 +560,7 @@ const loadProducts = async (req, res,next) => {
 };
 
 //load contact
-const loadContacts = async (req, res,next) => {
+const loadContacts = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
 
@@ -561,7 +576,7 @@ const loadContacts = async (req, res,next) => {
 
 //load about
 
-const loadAbout = async (req, res,next) => {
+const loadAbout = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
 
@@ -575,10 +590,12 @@ const loadAbout = async (req, res,next) => {
   }
 };
 
-const productView = async (req, res,next) => {
+const productView = async (req, res, next) => {
   try {
     const productId = req.query.id;
-    const productDetails = await Products.findOne({ _id: productId }).populate('category')
+    const productDetails = await Products.findOne({ _id: productId }).populate(
+      "category"
+    );
 
     const listedCategory = await category.find({ is_listed: true });
 
@@ -592,47 +609,51 @@ const productView = async (req, res,next) => {
       res.render("productdetails", { listedCategory, productDetails });
     }
   } catch (error) {
-    console.log(error)
-   next()
+    console.log(error);
+    next();
   }
 };
 
-const wishlist = async (req, res,next) => {
+const wishlist = async (req, res, next) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
 
     if (req.session.user) {
-      const whishedProduct = await whishlist.findOne({userId:req.session.user._id}).populate('products.productId')
-    
-      res.render("wishlist", { login: req.session.user, listedCategory,whishedProduct});
+      const whishedProduct = await whishlist
+        .findOne({ userId: req.session.user._id })
+        .populate("products.productId");
+
+      res.render("wishlist", {
+        login: req.session.user,
+        listedCategory,
+        whishedProduct,
+      });
     } else {
       res.render("wishlist", { listedCategory });
     }
   } catch (error) {}
 };
 
-const error404 = async (req,res)=>{
-  try{
-    const listedCategory = await category.find({ is_listed: true });
-    const errorMessage = req.query.message || 'An error occurred'
-    res.render('404',{listedCategory,errorMessage})
-  }catch(error){
-
-  }
-}
-
-const Greeting = async ( req, res,next)=>{
+const error404 = async (req, res) => {
   try {
     const listedCategory = await category.find({ is_listed: true });
-    if(req.session.user){
-      res.render('greetings',{login:req.session.user,listedCategory})
-    }else{
-      res.redirect('/')
+    const errorMessage = req.query.message || "An error occurred";
+    res.render("404", { listedCategory, errorMessage });
+  } catch (error) {}
+};
+
+const Greeting = async (req, res, next) => {
+  try {
+    const listedCategory = await category.find({ is_listed: true });
+    if (req.session.user) {
+      res.render("greetings", { login: req.session.user, listedCategory });
+    } else {
+      res.redirect("/");
     }
   } catch (error) {
-    console.log(error+'thanks')
+    console.log(error + "thanks");
   }
-}
+};
 
 module.exports = {
   loadHome,
@@ -655,5 +676,5 @@ module.exports = {
   verifyforgot,
   passmatchsave,
   error404,
-  Greeting
+  Greeting,
 };

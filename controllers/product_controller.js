@@ -17,7 +17,8 @@ const loadProducts = async (req, res) => {
     const totalCatCount = await Products.countDocuments();
     const totalPages = Math.ceil(totalCatCount / limit);
 
-    const productsData = await Products.find({}).populate("category")
+    const productsData = await Products.find({})
+      .populate("category")
       .skip(skip)
       .limit(limit);
 
@@ -38,10 +39,10 @@ const loadAddproduct = async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
-}; 
+};
 
 // add producrts post
- 
+
 const addProducts = async (req, res) => {
   try {
     const price = req.body.price;
@@ -51,8 +52,9 @@ const addProducts = async (req, res) => {
     image.forEach((file) => {
       images.push(file.filename);
     });
-    const deductedprice = Math.round((price / 100) * (100 - req.body.Discountprice));
-    
+    const deductedprice = Math.round(
+      (price / 100) * (100 - req.body.Discountprice)
+    );
 
     const currentDate = Date();
     const categories = await category.findOne({ name: req.body.category });
@@ -103,13 +105,10 @@ const productStatus = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-
-
     const produt = await Products.findOne({ _id: req.params.id });
     const { product, price, Discountprice, stock, description } = req.body;
     const deductedprice = Math.round((price / 100) * (100 - Discountprice));
-    
-    
+
     let imag = [];
 
     for (let i = 0; i < 3; i++) {
@@ -130,7 +129,7 @@ const editProduct = async (req, res) => {
         $set: {
           name: product,
           price: price,
-          discount:Discountprice,
+          discount: Discountprice,
           discout_price: deductedprice,
           stock: stock,
           description: description,
@@ -139,66 +138,67 @@ const editProduct = async (req, res) => {
       }
     );
     produt.save();
-    res.redirect('/admin/products')
+    res.redirect("/admin/products");
   } catch (error) {}
 };
 
 // searchproduct
 const searchProduct = async (req, res) => {
   try {
-    const findProduct = req.body.items
-    const searchedItem = await Products.find({ name: { $regex: new RegExp(`.*${findProduct}.*`, 'i') } }).populate('category');
+    const findProduct = req.body.items;
+    const searchedItem = await Products.find({
+      name: { $regex: new RegExp(`.*${findProduct}.*`, "i") },
+    }).populate("category");
 
-    
     res.send(searchedItem);
-    
   } catch (error) {}
 };
-const  priceFilter = async ( req , res ) => {
+const priceFilter = async (req, res) => {
   try {
-      const {low,high} =req.body
-    if(low&&high) {
-          const item = await Products.find({$and:[{price:{$gt:Number(low)}},{price:{$lte:Number(high)}}]}).populate('category')
-      if(item) {
-          res.send({cards:item})
-        }else{
-          res.send({status:'failed'})
-        }
-    }else{
-          res.send({status:'failed'})
-    }
-  
-      }catch (error) {
-  
+    const { low, high } = req.body;
+    if (low && high) {
+      const item = await Products.find({
+        $and: [
+          { price: { $gt: Number(low) } },
+          { price: { $lte: Number(high) } },
+        ],
+      }).populate("category");
+      if (item) {
+        res.send({ cards: item });
+      } else {
+        res.send({ status: "failed" });
       }
-  }
+    } else {
+      res.send({ status: "failed" });
+    }
+  } catch (error) {}
+};
 
- // Ascending filter
- 
- const Ascend = async (req , res)=>{
+// Ascending filter
+
+const Ascend = async (req, res) => {
   try {
-    const statuss =req.body.status
-    if(statuss){
-      const ascend =await Products.find({status:true}).sort({name:1}).populate('category')
-      res.send(ascend)
+    const statuss = req.body.status;
+    if (statuss) {
+      const ascend = await Products.find({ status: true })
+        .sort({ name: 1 })
+        .populate("category");
+      res.send(ascend);
     }
-  } catch (error) {
-    
-  }
- }
- // ascending priceFilter
- const priceAscend = async (req , res ) => {
+  } catch (error) {}
+};
+// ascending priceFilter
+const priceAscend = async (req, res) => {
   try {
-  
-    const statuss =req.body.status
-    if(statuss){
-      const ascend =await Products.find({status:true}).sort({price:1}).populate('category')
-      res.send(ascend)
+    const statuss = req.body.status;
+    if (statuss) {
+      const ascend = await Products.find({ status: true })
+        .sort({ price: 1 })
+        .populate("category");
+      res.send(ascend);
     }
-  } catch (error) {
-    
-  }
- }
+  } catch (error) {}
+};
 module.exports = {
   loadProducts,
   addProducts,
@@ -209,5 +209,5 @@ module.exports = {
   searchProduct,
   priceFilter,
   Ascend,
-  priceAscend
+  priceAscend,
 };

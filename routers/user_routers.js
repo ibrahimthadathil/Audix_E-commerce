@@ -16,20 +16,20 @@ const cart_controller = require("../controllers/cart_controller");
 
 const order_controller = require("../controllers/orderController");
 
-const product_controller = require ('../controllers/product_controller')
+const product_controller = require("../controllers/product_controller");
 
-const whish_controller = require ('../controllers/whishlist_controller')
+const whish_controller = require("../controllers/whishlist_controller");
 
-const wallet_controll = require('../controllers/userSide/wallet_controll')
+const wallet_controll = require("../controllers/userSide/wallet_controll");
 
-const coupon_controller = require ('../controllers/adminSide/coupon_controller')
-// error handle 
+const coupon_controller = require("../controllers/adminSide/coupon_controller");
+// error handle
 
 const errorHandler = (err, req, res, next) => {
- res.redirect(`/error`);
+  res.redirect(`/error`);
 };
 
-user_routers.use(errorHandler)
+user_routers.use(errorHandler);
 
 // const
 
@@ -40,10 +40,8 @@ const user_auth = require("../middleware/user_auth");
 user_routers.set("view engine", "ejs");
 user_routers.set("views", "./views/user");
 
-
-
 // 404
-user_routers.get('/error',user_controller.error404)
+user_routers.get("/error", user_controller.error404);
 
 //showing home page
 
@@ -178,13 +176,17 @@ user_routers.get("/checkout", checkout_controller.loadcheckout);
 user_routers.post("/checkoutAdd", checkout_controller.addAddresscheckout);
 
 // cart load
-user_routers.get("/cart",user_auth.islogout,user_auth.checkBlockedStatus,cart_controller.cart
+user_routers.get(
+  "/cart",
+  user_auth.islogout,
+  user_auth.checkBlockedStatus,
+  cart_controller.cart
 );
 
 // add cart
 user_routers.post("/addcart/:id", cart_controller.addCart);
 //cart count
-user_routers.post('/cartCount',cart_controller.cartCount)
+user_routers.post("/cartCount", cart_controller.cartCount);
 //chooseaddress
 user_routers.post("/chooseAddress", checkout_controller.chooseAddress);
 //editCheckout
@@ -209,84 +211,81 @@ user_routers.post("/placeorder", order_controller.orderplace);
 user_routers.get("/orderDetails", order_controller.orderDetails);
 
 // search product
-user_routers.put('/searchProduct',product_controller.searchProduct)
+user_routers.put("/searchProduct", product_controller.searchProduct);
 
-// price filter 
+// price filter
 
-user_routers.put('/priceFilter',product_controller.priceFilter)
+user_routers.put("/priceFilter", product_controller.priceFilter);
 
 //ascending order
 
-user_routers.put('/products/filter',product_controller.Ascend)
+user_routers.put("/products/filter", product_controller.Ascend);
 
 // price Ascrnding
 
-user_routers.put('/products/Pricefilter',product_controller.priceAscend)
+user_routers.put("/products/Pricefilter", product_controller.priceAscend);
 
 // thanks greeting
 
-user_routers.get('/thanks',user_controller.Greeting)
+user_routers.get("/thanks", user_controller.Greeting);
 
 // add whishlist
 
+user_routers.post("/addWhishlist/:id", whish_controller.addWhishlist);
 
-user_routers.post('/addWhishlist/:id',whish_controller.addWhishlist)
+// delete product form whishlist
 
-// delete product form whishlist 
+user_routers.put("/deleteWhish/:id", whish_controller.deleteWhish);
 
-user_routers.put('/deleteWhish/:id',whish_controller.deleteWhish)
+// user wallet
 
-// user wallet 
-
-user_routers.get('/wallet',user_auth.islogout,wallet_controll.loadWallet)
+user_routers.get("/wallet", user_auth.islogout, wallet_controll.loadWallet);
 
 // wallet razeor
 
-user_routers.put('/walletAdd',wallet_controll.Recharge)
+user_routers.put("/walletAdd", wallet_controll.Recharge);
 
 // add money into wallet
-user_routers.post('/addMoney',wallet_controll.addMoney)
+user_routers.post("/addMoney", wallet_controll.addMoney);
 
 // fetch razor
 
- user_routers.post('/razor',order_controller.razor)
+user_routers.post("/razor", order_controller.razor);
 
- // cancel order 
+// cancel order
 
- user_routers.put('/cancelOrder',order_controller.cancelOrder)
+user_routers.put("/cancelOrder", order_controller.cancelOrder);
 
- // return order 
+// return order
 
- user_routers.put('/returnOrder',order_controller.returnProduct)
+user_routers.put("/returnOrder", order_controller.returnProduct);
 
- // wallet usage 
+// wallet usage
 
- user_routers.put('/walletUse',wallet_controll.walletUse)
+user_routers.put("/walletUse", wallet_controll.walletUse);
 
 //  user_routers.use((err, req, res, next) => {
-  
+
 //   res.status(500).send('Something broke!');
 // });
 
+// user coupon
 
-// user coupon 
-
-user_routers.get('/coupon',coupon_controller.UserCoupon)
+user_routers.get("/coupon", coupon_controller.UserCoupon);
 
 // coupon apply
-user_routers.put('/couponApply',coupon_controller.coupCheck)
+user_routers.put("/couponApply", coupon_controller.coupCheck);
 
-// coupon use 
+// coupon use
 
-user_routers.post('/couponUse',coupon_controller.couponUse)
+user_routers.post("/couponUse", coupon_controller.couponUse);
 
 // user_routers.get('/invoice/:id',order_controller.invoice)
 
-user_routers.get('/invoiceDwld/:id',order_controller.invoiced)
+user_routers.get("/invoiceDwld/:id", order_controller.invoiced);
 
-user_routers.put('/couponRe',coupon_controller.couponRemove)
+user_routers.put("/couponRe", coupon_controller.couponRemove);
 
-user_routers.put('/displaycoup',coupon_controller.displayCoupon)
-
+user_routers.put("/displaycoup", coupon_controller.displayCoupon);
 
 module.exports = user_routers;
