@@ -2,11 +2,14 @@ const User = require("../models/usermodel");
 const Address = require("../models/address");
 const category = require("../models/category");
 const Cart = require("../models/cart");
+const couponModel = require('../models/coupons')
 
 //load checkout
 
 const loadcheckout = async (req, res) => {
   const listedCategory = await category.find({ is_listed: true });
+  const availableCoupon = await couponModel.find({status:true})
+ 
 
   if (req.session.user) {
     const userdata = await User.findById({ _id: req.session.user._id });
@@ -46,6 +49,7 @@ const loadcheckout = async (req, res) => {
         addressList,
         cartData,
         msg: flash,
+        availableCoupon
       });
     } else {
       const addressList =
@@ -58,6 +62,7 @@ const loadcheckout = async (req, res) => {
         cartData: 0,
         addressList,
         msg: flash,
+        availableCoupon
       });
     }
   } else {

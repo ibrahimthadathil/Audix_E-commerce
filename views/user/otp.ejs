@@ -180,7 +180,7 @@
 </script>
 
 
-<script>
+<!-- <script>
 
     
 
@@ -213,8 +213,45 @@
 
     // Start the timer when the page loads
     window.onload = startTimer;
-</script>
+</script> -->
 
+<script>
+function startTimer() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const createdAt = parseInt(urlParams.get("td"), 10); // OTP creation timestamp
+
+  const currentTime = Date.now();
+  const totalOtpTime = 60; // Total time for OTP expiration
+  const elapsedSeconds = Math.floor((currentTime - createdAt) / 1000); // Calculate elapsed time
+  let timeLeft = totalOtpTime - elapsedSeconds; // Calculate remaining time
+
+  const timerElement = document.getElementById("timer");
+  const buttonContainer = document.getElementById("button-container");
+
+  if (timeLeft <= 0) {
+    timerElement.textContent = "Resend OTP";
+    document.getElementById("resend-btn").disabled = false;
+    buttonContainer.style.display = "block"; // Show the "Resend OTP" button
+  } else {
+    timerElement.textContent = `Resend OTP in ${timeLeft} seconds`;
+
+    const countdown = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        timerElement.textContent = "Resend OTP";
+        document.getElementById("resend-btn").disabled = false;
+        buttonContainer.style.display = "block"; // Show the "Resend OTP" button
+      } else {
+        timeLeft -= 1; // Decrement time left
+        timerElement.textContent = `Resend OTP in ${timeLeft} seconds`;
+      }
+    }, 1000); // Update the countdown every second
+  }
+}
+
+window.onload = startTimer; // Start the timer when the page loads
+
+</script>
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/jquery.hoverIntent.min.js"></script>

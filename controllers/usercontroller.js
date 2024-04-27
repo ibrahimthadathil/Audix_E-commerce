@@ -135,14 +135,14 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
 
     const hashtokon = await securepassword(tokenNO);
 
-    const forgetotp = new Otp({
+    const forgetotp = await Otp.create({
       emailId: email,
       otp: sendotp,
       token: hashtokon,
     });
-    await forgetotp.save();
-
-    res.redirect(`/verify?email=${email}&&tokenid=${hashtokon}`);
+    // await forgetotp.save();
+    const createdAt = Date.now();
+    res.redirect(`/verify?email=${email}&&tokenid=${hashtokon}&td=${createdAt}`);
   } catch (error) {}
 };
 
@@ -161,15 +161,16 @@ const passmatch = async (req, res, next) => {
 //**********confirm password */
 const passmatchsave = async (req, res, next) => {
   try {
-    const email = req.body.email;
+    const bodyEmail = req.body.email;
     const passwordbdy = req.body.password;
     const confirmpass = req.body.re_password;
     const hashpassword = await securepassword(confirmpass);
 
+
     if (passwordbdy == confirmpass) {
       delete req.session.otp;
       const updateuser = await User.findOneAndUpdate(
-        { email: email },
+        { email: bodyEmail },
         { $set: { password: hashpassword } }
       );
       req.flash("flash", "changed");
@@ -185,14 +186,15 @@ const passmatchsave = async (req, res, next) => {
 
 const verifylogin = async (req, res, next) => {
   try {
-    const email = req.body.email;
-
+    const bodyEmail = req.body.email;
+  
     const verifiedUser = await User.findOne({
-      email: email,
+      email: bodyEmail,
       is_verified: true,
     });
+   
 
-    const blockedUser = await User.findOne({ email: email, is_blocked: true });
+    const blockedUser = await User.findOne({ email: bodyEmail, is_blocked: true });
 
     if (blockedUser) {
       req.flash(
@@ -210,7 +212,7 @@ const verifylogin = async (req, res, next) => {
 
       if (passwordMatch) {
         req.session.user = verifiedUser;
-
+        req.session.otpTime = undefined
         res.redirect("/");
       } else {
         req.flash("flash", "invalid password");
@@ -268,7 +270,7 @@ const insertUser = async (req, res, next) => {
           req.session.otp = OTP;
           console.log(OTP);
 
-          await sendOTPmail(req.body.fullname, req.body.email, OTP, res); // passing data as argument
+          await sendOTPmail(req.body.fullname, req.body.email, OTP, res,req); // passing data as argument
 
           setTimeout(async () => {
             await Otp.findOneAndDelete({ emailId: bodyEmail });
@@ -315,16 +317,15 @@ const generateToken = () => {
 };
 // sending  otp to mail
 
-const sendOTPmail = async (username, email, sendOtp, res) => {
+const sendOTPmail = async (username, email, sendOtp, res,req) => {
   try {
-    console.log(username);
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
-    });
+    }); 
 
     // compose email
     const mailOption = {
@@ -343,14 +344,15 @@ const sendOTPmail = async (username, email, sendOtp, res) => {
       }
     });
     // otp schema adding
-    const userOTP = new otp({
+    const userOTP = await otp.create({
       emailId: email,
       otp: sendOtp,
     });
 
-    await userOTP.save();
 
-    res.redirect(`/verify?email=${email}`);
+    const createdAt = Date.now();
+    req.session.otpTime = createdAt
+    res.redirect(`/verify?email=${email}&td=${createdAt}`);
   } catch (error) {
     console.log(error.message);
   }
@@ -381,7 +383,7 @@ const verifyOTP = async (req, res, next) => {
     const getQueryEmail = req.body.email;
     let enteredOTP =
       req.body.digit1 + req.body.digit2 + req.body.digit3 + req.body.digit4;
-
+      
     const verifiedOTP = await otp.findOne({
       emailId: getQueryEmail,
       otp: enteredOTP,
@@ -396,9 +398,10 @@ const verifyOTP = async (req, res, next) => {
       if (forgetData) {
         res.redirect(`/passwordVerify?email=${getQueryEmail}`);
       } else {
+
         req.flash("flash", "Invalid OTP...!");
         res.redirect(
-          `/verify?email=${getQueryEmail}&&tokenid=${req.body.token}`
+          `/verify?email=${getQueryEmail}&&tokenid=${req.body.token}&td=${createdAt}`
         );
       }
     } else {
@@ -430,8 +433,9 @@ const verifyOTP = async (req, res, next) => {
           res.redirect("/verify");
         }
       } else {
+       const createdAt = req.session.otpTime
         req.flash("flash", "Invalid OTP...!");
-        res.redirect(`/verify?email=${getQueryEmail}`);
+        res.redirect(`/verify?email=${getQueryEmail}&td=${createdAt}`);
       }
     }
   } catch (error) {
@@ -444,9 +448,9 @@ const verifyOTP = async (req, res, next) => {
 const resendOtp = async (req, res, next) => {
   try {
     const re_otpMail = req.query.email;
-
+   
     const userDataa = req.session.saveUser;
-
+   
     // const dataCheck = await User.findOne({email:re_otpMail})
 
     if (re_otpMail == userDataa.email) {
@@ -454,7 +458,7 @@ const resendOtp = async (req, res, next) => {
 
       console.log(OTP + " Re-send otp");
 
-      await sendOTPmail(userDataa.fullname, userDataa.email, OTP, res);
+      await sendOTPmail(userDataa.fullname, userDataa.email, OTP, res,req);
 
       setTimeout(async () => {
         await Otp.findOneAndDelete({ emailId: re_otpMail });

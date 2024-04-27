@@ -66,9 +66,9 @@
                                                 </div><!-- End .product-cat -->
                                                 <h3 class="product-title"><a href="/products"><%= item.category.name %></a></h3><!-- End .product-title -->
                                                 <div class="product-price d-flex gap-4 ">
-                                                    <div class="<%= item.discount>0?'text-decoration-line-through text-danger opacity-50 ':'' %>">$<%= item.price %>.00</div>
+                                                    <div class="<%= item.discount>0?'text-decoration-line-through text-danger opacity-50 ':'' %>">₹<%= item.price %>.00</div>
                                                     <% if(item.discount > 0){ %>
-                                                    <div class="text-success ">offer : $<%= item.discout_price %>.00</div>
+                                                    <div class="text-success ">offer : ₹<%= item.discout_price %>.00</div>
                                                     <% } %>
                                                     
                                                 </div><!-- End .product-price -->
@@ -182,7 +182,7 @@
                                         
                                         <div class="form-check form-switch">
                                             <input data-product="<%= JSON.stringify(product) %>" class="form-check-input" onclick="PriceFilterAs(this)" type="checkbox" id="sortDE">
-                                            <label class="form-check-label" for="sortDE">$price (low-high)</label>
+                                            <label class="form-check-label" for="sortDE">₹price (low-high)</label>
                                         </div>
                                   
                                 </div>

@@ -77,11 +77,11 @@
                                 <div class="d-flex gap-2 ">
                                     <div class="product-price  ">
                                         
-                                   <h6 class="<%=productDetails.discount>0 ? 'text-decoration-line-through text-danger opacity-50':''%>"> $<%=productDetails.price%>.00 </h6           > 
+                                   <h6 class="<%=productDetails.discount>0 ? 'text-decoration-line-through text-danger opacity-50':''%>"> ₹<%=productDetails.price%>.00 </h6           > 
                                     </div><!-- End .product-price -->
                                     <% if(productDetails.discount>0){ %>
                                     <div class="product-price">
-                                   <h6 class="text-success fst-italic ">offer price: $
+                                   <h6 class="text-success fst-italic ">offer price: ₹
                                     <%=productDetails.discout_price%></h6>
                                     </div>
                                     <% } %>
@@ -126,7 +126,7 @@
                                     <button onclick="addCart('<%=productDetails._id%>')" id="btns" class="btn-product btn-cart " style="cursor: pointer;" ><span id="crt">add to cart</span></button>
 
                                     <div class="details-action-wrapper">
-                                        <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        <a onclick="addWhishlist('<%= productDetails._id %>')"class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                         <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a>
                                     </div><!-- End .details-action-wrapper -->
                                 </div><!-- End .product-details-action -->
@@ -527,6 +527,52 @@ if (stock.value == 0) {
             
 </script>
 <script>
+    // add to wish list 
+    function addWhishlist(id){
+    fetch(`/addWhishlist/${id}`,{method:'post'})
+    .then(res =>res.json())
+    .then(data=>{
+        if(data.failed){
+            window.location.href = '/login'
+        }else if(data.success){
+            const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+                }
+                });
+                Toast.fire({
+                icon: "success",
+                title: "Added TO Whishlist"
+                });
+
+        }else if(data.exist){
+            
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+                });
+                Toast.fire({
+                icon: "warning",
+                title: "Already Added"
+                });
+        }
+    })
+  }
+
+    // add to cart
     function addCart(id){
         const qty = document.getElementById('quantity').value
         console.log(qty);
