@@ -13,7 +13,7 @@ const loadWallet = async (req, res) => {
     const listedCategory = await category.find({ is_listed: true });
     const availablebalance = await Wallet.findOne({
       userId: req.session.user._id,
-    });
+    })
     const flash = req.flash("flash");
     if (req.session.user) {
       res.render("Profile/wallet", {

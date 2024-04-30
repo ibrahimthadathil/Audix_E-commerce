@@ -151,6 +151,7 @@
         errorMessage.textContent = "Please enter a valid  Amount.";
             addButton.disabled = true;
        }
+
       function vali(money){
         const err = document.getElementById('err')
         const btn = document.getElementById('btn')
@@ -210,16 +211,16 @@
       const msg = document.getElementById('mg')
       if(msg.textContent.trim()=='topup'){
         const Toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
-  }
-})
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+        })
 Toast.fire({
   icon: "success",
   title: "Wallet Recharged Successfully"

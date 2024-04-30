@@ -602,6 +602,8 @@ const productView = async (req, res, next) => {
     );
 
     const listedCategory = await category.find({ is_listed: true });
+    const related = await Products.find({category:productDetails.category})
+   
 
     if (req.session.user) {
       res.render("productdetails", {
@@ -610,7 +612,7 @@ const productView = async (req, res, next) => {
         productDetails,
       });
     } else {
-      res.render("productdetails", { listedCategory, productDetails });
+      res.render("productdetails", { listedCategory, productDetails ,related});
     }
   } catch (error) {
     console.log(error);

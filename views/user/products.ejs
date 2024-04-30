@@ -518,7 +518,7 @@ if(msg.textContent.trim()=='orderd'){
 }
     
     function addCart(id,){
-        fetch(`/addcart/${id}`,{method:'post'})
+        fetch(`/addcart/${id}`,{method:'post',})
         .then(res => res.json())
         .then(data =>{
             if(data.failed){

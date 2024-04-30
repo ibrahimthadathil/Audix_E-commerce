@@ -15,7 +15,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                <div class="custom-actions-btns mb-5">
                   <!-- Add an id to the download button -->
-                  <a href="#" id="downloadBtn" onclick="downloadPDF()" class="btn btn-danger ">
+                  <a href="#" id="downloadBtn" onclick="downloadPDF('AUDIX')" class="btn btn-danger ">
                      <i class="icon-download"></i> Download PDF
                   </a>
                   
@@ -285,9 +285,9 @@
 <script>
    
    window.jsPDF = window.jspdf.jsPDF;
-var docPDF = new jsPDF();
+   var docPDF = new jsPDF();
 
-function downloadPDF(invoiceNo) {
+   function downloadPDF(invoiceNo) {
     var elementHTML = document.querySelector("#myBillingArea");
     html2canvas(elementHTML).then(function(canvas) {
         var imgData = canvas.toDataURL('image/png');
