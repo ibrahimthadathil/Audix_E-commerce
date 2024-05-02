@@ -3,8 +3,6 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const otp = require("../models/OTPmodel");
 const flash = require("express-flash");
-const { trusted } = require("mongoose");
-const Otp = require("../models/OTPmodel");
 require("dotenv").config();
 const { EMAIL_USER, EMAIL_PASSWORD } = process.env;
 const Address = require("../models/address");
@@ -138,7 +136,7 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res,req) => {
 
     const hashtokon = await securepassword(tokenNO);
     
-    const forgetotp = new Otp({
+    const forgetotp = new otp({
       emailId: email,
       otp: sendotp,
       token: hashtokon,
@@ -280,7 +278,7 @@ const insertUser = async (req, res, next) => {
           await sendOTPmail(req.body.fullname, req.body.email, OTP, res,req); // passing data as argument
 
           setTimeout(async () => {
-            await Otp.findOneAndDelete({ emailId: bodyEmail });
+            await otp.findOneAndDelete({ emailId: bodyEmail });
           }, 60000);
         } else {
           res.redirect("/signup");
@@ -324,7 +322,7 @@ const generateToken = () => {
 };
 // sending  otp to mail
 
-const sendOTPmail = async (username, email, sendOtp, res,req) => {
+const sendOTPmail = async (username, email, sendOtp, res,req) => { 
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -355,8 +353,7 @@ const sendOTPmail = async (username, email, sendOtp, res,req) => {
       emailId: email,
       otp: sendOtp,
     });
-
-
+ 
     const createdAt = Date.now();
     req.session.otpTime = createdAt
     res.redirect(`/verify?email=${email}&td=${createdAt}`);
@@ -408,7 +405,6 @@ const verifyOTP = async (req, res, next) => {
       } else {
         createdAt=req.session.otpTime
         req.flash("flash", "Invalid OTP...!");
-          console.log('qwerty');
         res.redirect(
           `/verify?email=${getQueryEmail}&&tokenid=${req.body.token}&td=${createdAt}`
         );
@@ -435,7 +431,7 @@ const verifyOTP = async (req, res, next) => {
             { _id: userData._id },
             { $set: { is_verified: true } }
           );
-
+   
           req.session.user = userData;
 
           req.flash("flash", "verified successfully");
@@ -478,7 +474,7 @@ const resendOtp = async (req, res, next) => {
       await sendOTPmail(userDataa.fullname, userDataa.email, OTP, res,req);
 
       setTimeout(async () => {
-        await Otp.findOneAndDelete({ emailId: re_otpMail });
+        await otp.findOneAndDelete({ emailId: re_otpMail });
       }, 60000);
     }
   }
