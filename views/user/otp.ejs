@@ -54,10 +54,9 @@
                                                 <input type="text" hidden value="<%=token%>"  name="token">
                                                 <% } %>
 
-
 											
 											<br><br>
-											<!-- <p id="timer">Time remaining: <span id="countdown">60</span> seconds</p> -->
+											
 
                                             <div>
                                                 <p id="timer">
@@ -75,7 +74,9 @@
 												</button>
 												
 												
-												<!-- </a> -->
+												<!-- setting both forget and new user the  -->
+
+                                                <% if(locals.token==null) {%>
 												<div class="justify-content-center text-warning" id="button-container" style="display: none;">
                                                     <button class="btn btn-outline-primary-2 text-warning" id="resend-btn"  type="submit">
                                                         <a href="/resend-otp?email=<%=queryemail%>">
@@ -83,7 +84,15 @@
                                                         </a>
                                                     </button>
                                                 </div>
-                                                
+                                                <% }else{ %>
+                                                    <div class="justify-content-center text-warning" id="button-container" style="display: none;">
+                                                        <button class="btn btn-outline-primary-2 text-warning" id="resend-btn"  type="submit">
+                                                            <a href="/resend-otp?email=<%=queryemail%>&tokenid=<%=token%>">
+                                                                Resend OTP
+                                                            </a>
+                                                        </button>
+                                                    </div>
+                                                    <% } %>
 												<!-- <div class="custom-control custom-checkbox">
 													<input type="checkbox" class="custom-control-input" id="signin-remember-2">
 													<label class="custom-control-label" for="signin-remember-2">Remember Me</label> -->

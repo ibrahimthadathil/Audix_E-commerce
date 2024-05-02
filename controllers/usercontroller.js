@@ -73,10 +73,13 @@ const loadlogin = async (req, res, next) => {
 
 const loadforgot = async (req, res, next) => {
   try {
+    delete req.session.otp;
     const listedCategory = await category.find({ is_listed: true });
     const flash = req.flash("flash");
     res.render("forgett", { msg: flash, listedCategory });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message)
+  }
 };
 
 /***********verify forget */
@@ -94,7 +97,7 @@ const verifyforgot = async (req, res, next) => {
         req.session.otp = OTp;
         console.log("forget otp  :- " + OTp);
         const genaratetoken = generateToken();
-        await forgotOtpMail(forgetemail, user, OTp, genaratetoken, res);
+        await forgotOtpMail(forgetemail, user, OTp, genaratetoken, res , req);
       }
     } else {
       req.flash("flash", "not verified");
@@ -105,7 +108,7 @@ const verifyforgot = async (req, res, next) => {
 
 //*******mail for Forget password */
 
-const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
+const forgotOtpMail = async (email, user, sendotp, tokenNO, res,req) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -134,7 +137,7 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
     // otp schema adding
 
     const hashtokon = await securepassword(tokenNO);
-    console.log(email ,sendotp ,hashtokon );
+    
     const forgetotp = new Otp({
       emailId: email,
       otp: sendotp,
@@ -142,8 +145,12 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
     });
     await forgetotp.save();
     const createdAt = Date.now();
+    req.session.otpTime = createdAt
+    req.session.token = hashtokon
     res.redirect(`/verify?email=${email}&&tokenid=${hashtokon}&td=${createdAt}`);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error.message)
+  }
 };
 
 //****loadpassmatch-forgot */
@@ -358,15 +365,15 @@ const sendOTPmail = async (username, email, sendOtp, res,req) => {
   }
 };
 
-const loadotpVerify = async (req, res, next) => {
+const loadotpVerify = async (req, res, next) => { 
   try {
     const listedCategory = await category.find({ is_listed: true });
     if (req.session.otp) {
       const token = req.query.tokenid || null;
       const queryemail = req.query.email;
-
+      const createdAt = Date.now()
       const flash = req.flash("flash");
-      res.render("otp", { queryemail, msg: flash, listedCategory, token });
+      res.render("otp", { queryemail, msg: flash, listedCategory, token ,createdAt});
     } else {
       res.redirect("/login");
     }
@@ -396,10 +403,12 @@ const verifyOTP = async (req, res, next) => {
         token: req.body.token,
       });
       if (forgetData) {
+        delete req.session.otp;
         res.redirect(`/passwordVerify?email=${getQueryEmail}`);
       } else {
         createdAt=req.session.otpTime
         req.flash("flash", "Invalid OTP...!");
+          console.log('qwerty');
         res.redirect(
           `/verify?email=${getQueryEmail}&&tokenid=${req.body.token}&td=${createdAt}`
         );
@@ -420,7 +429,7 @@ const verifyOTP = async (req, res, next) => {
           });
           userData.save();
 
-          req.session.otp = undefined;
+          delete req.session.otp;
 
           await User.findByIdAndUpdate(
             { _id: userData._id },
@@ -448,11 +457,19 @@ const verifyOTP = async (req, res, next) => {
 const resendOtp = async (req, res, next) => {
   try {
     const re_otpMail = req.query.email;
-   
+    
     const userDataa = req.session.saveUser;
-   
-    // const dataCheck = await User.findOne({email:re_otpMail})
+   if(req.session.token){
 
+     const userDetails = await User.findOne({email:re_otpMail})
+    const OTP = generateOTP();
+    const genaratetoken = generateToken();
+    console.log(OTP + " Re-send otp");
+    
+  
+    await forgotOtpMail( re_otpMail,userDetails.fullname, OTP,genaratetoken, res,req)
+   }else{
+  
     if (re_otpMail == userDataa.email) {
       const OTP = generateOTP();
 
@@ -464,6 +481,7 @@ const resendOtp = async (req, res, next) => {
         await Otp.findOneAndDelete({ emailId: re_otpMail });
       }, 60000);
     }
+  }
   } catch (error) {
     console.log(error.message);
     next();
