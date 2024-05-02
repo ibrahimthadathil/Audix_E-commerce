@@ -134,13 +134,13 @@ const forgotOtpMail = async (email, user, sendotp, tokenNO, res) => {
     // otp schema adding
 
     const hashtokon = await securepassword(tokenNO);
-
-    const forgetotp = await Otp.create({
+    console.log(email ,sendotp ,hashtokon );
+    const forgetotp = new Otp({
       emailId: email,
       otp: sendotp,
       token: hashtokon,
     });
-    // await forgetotp.save();
+    await forgetotp.save();
     const createdAt = Date.now();
     res.redirect(`/verify?email=${email}&&tokenid=${hashtokon}&td=${createdAt}`);
   } catch (error) {}
@@ -398,7 +398,7 @@ const verifyOTP = async (req, res, next) => {
       if (forgetData) {
         res.redirect(`/passwordVerify?email=${getQueryEmail}`);
       } else {
-
+        createdAt=req.session.otpTime
         req.flash("flash", "Invalid OTP...!");
         res.redirect(
           `/verify?email=${getQueryEmail}&&tokenid=${req.body.token}&td=${createdAt}`
