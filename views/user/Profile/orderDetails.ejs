@@ -213,7 +213,20 @@
 
                             <td>
 
+                              <% if (product.orderProStatus == 'payment failed') { %>
+
+                                <button type="button" class="btn btn-primary" onclick="razorPayy('<%= order.userId %>' , '<%= order.orderAmount %>' , '<%= order._id %>')">
+
+                                  <span >Place Order</span>
+
+                                </button>
+                                                                
+                            <%  } else { %>
+
                               <button  style="min-width: 80px;"  data-bs-toggle="modal" data-bs-target="#<%= index %>" class="btn <%=product.orderProStatus=='delivered'? 'bg-primary':'bg-danger' %>  text-white "><%=product.orderProStatus=='delivered'?'Return':'Cancel'%></button>
+
+                              <% } %>
+
                                <!-- Modal for cancel/return-->
                                <div class="modal fade" id="<%= index %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">

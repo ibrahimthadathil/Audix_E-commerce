@@ -37,7 +37,7 @@ const loadHome = async (req, res, next) => {
     } else {
       res.render("homepage", { listedCategory, allProduct });
     }
-  } catch (error) {
+  } catch (error) {    
     console.log(error.message);
   }
 };
@@ -624,6 +624,7 @@ const productView = async (req, res, next) => {
         login: req.session.user,
         listedCategory,
         productDetails,
+        related
       });
     } else {
       res.render("productdetails", { listedCategory, productDetails ,related});

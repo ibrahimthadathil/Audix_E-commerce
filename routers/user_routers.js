@@ -26,7 +26,12 @@ const coupon_controller = require("../controllers/adminSide/coupon_controller");
 // error handle
 
 const errorHandler = (err, req, res, next) => {
-  res.redirect(`/error`);
+  console.error('Error in user routes:', err);
+  req.session.error = {
+    status: err.status || 500,
+    message: err.message || 'An unexpected error occurred'
+  };
+  res.redirect('/error');
 };
 
 user_routers.use(errorHandler);
@@ -41,7 +46,39 @@ user_routers.set("view engine", "ejs");
 user_routers.set("views", "./views/user");
 
 // 404
-user_routers.get("/error", user_controller.error404);
+user_routers.get("/error", async (req, res) => {
+  try {
+    const error = req.session.error || {
+      status: 500,
+      message: 'An unexpected error occurred'
+    };
+    
+    // Clear the error from session
+    delete req.session.error;
+    
+    // Get a more user-friendly title based on status code
+    let errorTitle = 'Error';
+    if (error.status === 404) {
+      errorTitle = 'Page Not Found';
+    } else if (error.status === 401) {
+      errorTitle = 'Unauthorized';
+    } else if (error.status === 403) {
+      errorTitle = 'Access Denied';
+    } else if (error.status === 500) {
+      errorTitle = 'Server Error';
+    }
+    
+    res.render('404', {
+      listedCategory: [],
+      errorMessage: error.message,
+      statusCode: error.status,
+      errorTitle: errorTitle
+    });
+  } catch (error) {
+    console.error('Error rendering error page:', error);
+    res.status(500).send('Error page not found');
+  }
+});
 
 //showing home page
 
@@ -206,6 +243,8 @@ user_routers.put("/cartUpdate", cart_controller.cartEdit);
 user_routers.get("/orders", order_controller.loadOrder);
 
 user_routers.post("/placeorder", order_controller.orderplace);
+// failed payment 
+user_routers.post('/faiedPayment',order_controller.failedPayment)
 
 // user_router
 user_routers.get("/orderDetails", order_controller.orderDetails);

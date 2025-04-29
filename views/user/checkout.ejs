@@ -593,9 +593,10 @@ function razor(amount, userId) {
 
                     let razorpayObject = new Razorpay(options);
                     razorpayObject.on('payment.failed', (response) => {
-                       alert('payment failed')
-                    //    fetch('/failedPayment',{method:'post',headers:{'Content-type':'application/json'}})
-                       razorpayObject.close();
+                       
+                    form.action='/faiedPayment'
+                    form.submit()
+                    //    razorpayObject.close();
                     });
                     razorpayObject.open();
                 }else if(data.emptycart){

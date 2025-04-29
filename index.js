@@ -1,4 +1,6 @@
 const dotenv = require("dotenv").config();
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+
 
 const mongoose = require("mongoose");
 
@@ -43,9 +45,13 @@ const adminroutes = require("./routers/admin_routers");
 
 app.use("/admin", adminroutes);
 
+// Catch-all route should be before error handlers
 app.get("*", (req, res) => {
   res.redirect("/error");
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 

@@ -395,6 +395,61 @@ const invoiced = async (req, res) => {
     console.log(error);
   }
 };
+
+const failedPayment = async (req , res ) => {
+  try {
+    const addAddress = await Address.findOne(
+      { userId: req.session.user._id, "addresss.status": true },
+      { "addresss.$": 1 }
+    );
+    const caart = await Cart.findOne({ userId: req.session.user._id }).populate(
+      "product.productId"
+    );
+    const { userName, name, city, state, phone, pincode } =
+              addAddress?.addresss?.[0] ?? {};
+
+            let paymentMethod = req.body.peyment;
+
+            const orderConfirm = new Order({
+
+              UserId: req.session.user._id,
+
+              products: caart.product.map((elem) => ({
+
+                productId:elem.productId,
+                price:elem.price,
+                quantity:elem.quantity,
+                orderProStatus : 'payment failed',
+
+              })),
+
+              deliveryAddress: {
+                name: userName,
+                phone: phone,
+                place: name,
+                pincode: pincode,
+                state: state,
+                city: city,
+              },
+              orderDate: Date.now(),
+              orderAmount: caart.Total_price,
+              payment: paymentMethod,
+              discount: caart.couponDiscount,
+              discountRate: caart.discountRate,
+            });
+            const saveOrderr = await orderConfirm.save();
+
+            if(saveOrderr){
+
+              console.log("Okeyyyyyy");
+              res.redirect('/orders')
+
+            }
+
+  } catch (error) {
+    console.log(error);
+  }
+}
 module.exports = {
   loadOrder,
   orderplace,
@@ -403,4 +458,5 @@ module.exports = {
   cancelOrder,
   returnProduct,
   invoiced,
+  failedPayment
 };
