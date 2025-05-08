@@ -159,14 +159,16 @@
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-												
-	                							<td id="sub-total">₹<%=totalprice + cartData?.couponDiscount %>.00</td>
-	                						</tr><!-- End .summary-subtotal -->
+											
+												<% if (cartData) { %>
+													<td id="sub-total">₹<%= totalprice??0 + cartData.couponDiscount %>.00</td>
+												<% } %>
+												</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
 	                							<td>&nbsp;</td>
 	                						</tr>
-											<%if(locals.cartData?.couponDiscount>0) {%>
+											<%if(locals?.cartData?.couponDiscount>0) {%>
                                                 <tr>
                                                     <td>Coupon Discount :</td>
                                                     <td class="text-success ">-₹<%=cartData?.couponDiscount %>.00</td>

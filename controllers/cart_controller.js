@@ -62,6 +62,7 @@ const cart = async (req, res) => {
           login: req.session.user,
           listedCategory,
           totalprice: 0,
+          cartData:[]
         });
       }
     } else {
