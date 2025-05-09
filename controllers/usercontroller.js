@@ -27,7 +27,6 @@ const loadHome = async (req, res, next) => {
     const listedCategory = await category.find({ is_listed: true });
 
     const allProduct = await Products.find({}).populate("category");
-    console.log(allProduct,allProduct.length,'🎉');
     
     if (req.session.user) {
       res.render("homepage", {

@@ -1,5 +1,4 @@
 const fs = require('fs');
-const easyinvoice = require('easyinvoice');
 
 const data = (det) => {
     const products = det.products.map((e, i) => {  return (

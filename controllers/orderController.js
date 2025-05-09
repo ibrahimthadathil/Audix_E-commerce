@@ -5,16 +5,11 @@ const Category = require("../models/category");
 const Cart = require("../models/cart");
 const Order = require("../models/order");
 const instance = require("../config/razorpay");
-const order = require("../models/order");
 const Wallet = require("../models/wallet");
 const wallet = require("../models/wallet");
 const product = require("../models/product");
-const invoiceConfig = require("../config/invoice");
 require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
-const { v4: uuid } = require("uuid");
-const easyinvoice = require("easyinvoice");
+
 
 // load Order
 const loadOrder = async (req, res) => {
