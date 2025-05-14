@@ -421,17 +421,13 @@ const verifyOTP = async (req, res, next) => {
             phone: req.session.saveUser.phone,
             password: hashpassword,
             is_admin: 0,
+            is_verified:true,
             is_blocked: false,
           });
           userData.save();
 
           delete req.session.otp;
 
-          await User.findByIdAndUpdate(
-            { _id: userData._id },
-            { $set: { is_verified: true } }
-          );
-   
           req.session.user = userData;
 
           req.flash("flash", "verified successfully");
