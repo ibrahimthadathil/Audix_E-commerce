@@ -280,7 +280,6 @@
 
 	// delete cart
 	function deleteCart(id){
-		console.log(id);
 		fetch(`/deleteCart/${id}`,{method:"post"})
 		.then(data =>{
 			$('#reloadDiv').load('/cart #reloadDiv')

@@ -148,10 +148,8 @@
    const btn= document.getElementById(`b${user}`)
    const status= document.getElementById(`s${user}`)
    fetch(`/admin/users/${user}`);
-   console.log(btn.textContent);
    
    if(btn.textContent=='Block'){
-     console.log('block');
      btn.textContent='Unblock';
      btn.classList.add('btn-outline-success');
   btn.classList.remove('btn-outline-danger')

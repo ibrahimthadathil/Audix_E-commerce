@@ -360,7 +360,6 @@
 
 // Edit address
  function  editAddress(input){
-    console.log(input);
 const add= document.getElementById('Editaddress')
 const City = document.getElementById('editcity')
 const State = document.getElementById('editstate')
@@ -382,7 +381,6 @@ fetch(`/editaddresss`,{method:'put',headers:{'Content-Type':'application/json'},
 
 
 })
-console.log(add.value,City.value,State.value+'ghgh');
 }
 
 

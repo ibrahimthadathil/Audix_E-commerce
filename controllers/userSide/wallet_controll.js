@@ -13,7 +13,7 @@ const loadWallet = async (req, res) => {
     const listedCategory = await category.find({ is_listed: true });
     const availablebalance = await Wallet.findOne({
       userId: req.session.user._id,
-    })
+    });
     const flash = req.flash("flash");
     if (req.session.user) {
       res.render("Profile/wallet", {
@@ -32,7 +32,6 @@ const loadWallet = async (req, res) => {
 const walletUse = async (req, res) => {
   try {
     const { total, userid } = req.body;
-    // console.log(userid)
     const Walltcheck = await Wallet.findOne({ userId: userid });
     if (Walltcheck) {
       if (Walltcheck.balance >= total) {
@@ -90,8 +89,6 @@ const walletUse = async (req, res) => {
                 let paymentMethod = req.body.peyment;
 
                 const lastBalance = Walltcheck.balance - total;
-                console.log(total + " total");
-                console.log(lastBalance + "   las");
 
                 await Wallet.findOneAndUpdate(
                   { userId: userid },

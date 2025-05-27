@@ -591,7 +591,6 @@ function isChecked() {
 
   // for cancel the order
     function cancel(productid,orderid){
-      console.log(productid,+ '   '+orderid);
      fetch('/cancelOrder',{method:'put',headers:{'Content-type':'application/json'},body:JSON.stringify({cancelproduct:productid,cancelorder:orderid})})
      .then(res =>res.json())
      .then(data =>{

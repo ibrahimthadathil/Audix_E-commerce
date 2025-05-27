@@ -79,7 +79,6 @@ const orderplace = async (req, res) => {
       req.flash("flash", "no cart");
       res.redirect("/checkout");
     } else if (!addAddress) {
-      console.log("no address");
       req.flash("flash", "Please Add your address..!");
       res.redirect("/checkout");
     } else {
@@ -436,7 +435,6 @@ const failedPayment = async (req , res ) => {
 
             if(saveOrderr){
 
-              console.log("Okeyyyyyy");
               res.redirect('/orders')
 
             }

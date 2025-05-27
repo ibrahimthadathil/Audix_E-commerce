@@ -327,7 +327,6 @@ const cart = document.getElementById('crt');
 const button = document.getElementById('btns')
 const stock = document.getElementById('stock');
 
-console.log(stock.value);
 
 if (stock.value == 0) {
     cart.textContent = 'Out of stock';
@@ -392,7 +391,6 @@ if (stock.value == 0) {
     // add to cart
     function addCart(id){
         const qty = document.getElementById('quantity').value
-        console.log(qty);
         fetch(`/addcart/${id}`,{method:'post' , headers : {'Content-Type':'application/json'},body:JSON.stringify({qty})} )
 
 
@@ -490,11 +488,9 @@ Toast.fire({
     elem.onmousemove = e => {
         const horizontel = (e.clientX - x) / width * 100;
         const vertical = (e.clientY - y) / height * 100;
-        console.log(vertical);
 
         elem.style.setProperty('--x', horizontel + '%')
         elem.style.setProperty('--y', vertical + '%')
-        console.log(elem);
     }
 
 

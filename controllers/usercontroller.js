@@ -181,7 +181,6 @@ const passmatchsave = async (req, res, next) => {
       req.flash("flash", "changed");
       res.redirect("/passwordVerify");
     } else {
-      console.log("problem in update");
     }
   } catch (error) {
     console.log(error.message);

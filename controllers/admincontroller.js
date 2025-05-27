@@ -145,7 +145,6 @@ const adminCategory = async (req, res) => {
 
 const adminLogout = async (req, res) => {
   try {
-    console.log("gh");
     req.session.admin = undefined;
 
     req.flash("flash", "logout succcessfully...");

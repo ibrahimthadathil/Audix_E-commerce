@@ -574,7 +574,6 @@ function razor(amount, userId) {
                 body: JSON.stringify({ amount, userId })
             }).then(res => res.json()).then(data => {
                 if (data.succes) {
-                    console.log(data)
                     let options = {
                                     "key": `${data.key_id}`,
                                     "amount": `${data.amount}`,
@@ -672,14 +671,12 @@ function submit1(amount, userId){
     function addAddress(id){
 
         const form = document.getElementById('addform')
-        console.log(form);
         const formdata = new FormData(form)
         const address = {}
         formdata.forEach((val,i)=>{
             address[i]=val
     })
 
-    // console.log(address);
     
 
     fetch(`/checkoutAdd?id=${id}`,{method:"post",headers: {'Content-Type' : 'application/json'},body:JSON.stringify({address})
@@ -743,7 +740,6 @@ function addresChoose(id){
         const pin = document.getElementById('editpincode')
         const PHONE = document.getElementById('editphone')
         const Id = document.getElementById('id')
-        console.log(input);
 fetch(`/checkeditaddress`,{method:'put',headers:{'Content-Type':'application/json'},body:JSON.stringify({input})})
 .then(res => res.json())
 .then(data => {

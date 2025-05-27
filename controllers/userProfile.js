@@ -70,7 +70,6 @@ const passCange = async (req, res) => {
       req.flash("flash", "passchanged");
       res.redirect("/profile");
     } else {
-      console.log("hi 4");
       req.flash("flash", "failed");
       res.redirect("/profile");
     }
